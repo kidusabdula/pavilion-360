@@ -95,7 +95,7 @@ export default function RentalsPage() {
         title="Equipment Rentals"
         subtitle="Professional-grade AV, lighting, staging, and furniture rentals for any event."
         backgroundImage="/event-equipment-rentals.jpg"
-        size="medium"
+
       />
 
       <section className="py-12">
