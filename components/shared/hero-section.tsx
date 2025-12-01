@@ -1,5 +1,8 @@
+"use client"
+
 import type { ReactNode } from "react"
 import { cn } from "@/lib/utils"
+import { motion } from "framer-motion"
 
 interface HeroSectionProps {
   title: string | ReactNode
@@ -46,15 +49,39 @@ export function HeroSection({
       {/* Content */}
       <div className="container relative z-10 mx-auto px-4">
         <div className={cn("mx-auto max-w-4xl", align === "center" && "text-center", align === "left" && "text-left")}>
-          {typeof title === "string" ? (
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">{title}</h1>
-          ) : (
-            title
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            {typeof title === "string" ? (
+              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">{title}</h1>
+            ) : (
+              title
+            )}
+          </motion.div>
+
+          {subtitle && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="mt-6 text-lg text-muted-foreground sm:text-xl"
+            >
+              {subtitle}
+            </motion.div>
           )}
 
-          {subtitle && <div className="mt-6 text-lg text-muted-foreground sm:text-xl">{subtitle}</div>}
-
-          {children && <div className="mt-8">{children}</div>}
+          {children && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="mt-8"
+            >
+              {children}
+            </motion.div>
+          )}
         </div>
       </div>
     </section>
