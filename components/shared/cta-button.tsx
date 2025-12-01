@@ -22,9 +22,9 @@ export function CtaButton({
   className,
 }: CtaButtonProps) {
   const variantStyles = {
-    primary: "bg-accent text-accent-foreground hover:bg-accent/90",
-    secondary: "bg-primary text-primary-foreground hover:bg-primary/90",
-    outline: "border-2 border-accent text-accent-foreground hover:bg-accent",
+    primary: "bg-black text-yellow-400 hover:bg-black/90 hover:text-yellow-300",
+    secondary: "bg-black text-yellow-400 hover:bg-black/90 hover:text-yellow-300",
+    outline: "border-2 border-black text-yellow-400 hover:bg-black hover:text-yellow-300",
   }
 
   return (
