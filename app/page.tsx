@@ -1,13 +1,30 @@
-import type { Metadata } from "next"
+"use client"
+
 import { HeroSection } from "@/components/shared/hero-section"
 import { CtaButton } from "@/components/shared/cta-button"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 import { ArrowRight } from "@/components/icons"
 import { InstagramFeed } from "@/components/shared/instagram-feed"
+import { motion } from "framer-motion"
 
-export const metadata: Metadata = {
-  title: "Pavilion360 | Event Solutions & AV Production in Indianapolis",
-  description:
-    "Crafting unforgettable experiences for every occasion. Full-service event management, AV production, creative services, and rentals in Indianapolis.",
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5 },
+  },
 }
 
 export default function HomePage() {
@@ -33,16 +50,22 @@ export default function HomePage() {
           >
             Check Out Our 2025 Catalog
           </CtaButton>
-          <CtaButton href="/contact" variant="outline" size="lg">
-            Contact
-          </CtaButton>
+          <Button asChild size="lg" className="bg-yellow-400 text-black hover:bg-black hover:text-yellow-400 transition-colors duration-300">
+            <Link href="/contact">Contact</Link>
+          </Button>
         </div>
       </HeroSection>
 
       {/* Core Services with Circular Icons */}
       <section className="py-20 lg:py-32">
         <div className="container mx-auto px-4">
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <motion.div
+            className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={containerVariants}
+          >
             {[
               {
                 title: "Audio / Visual Production",
@@ -73,8 +96,9 @@ export default function HomePage() {
                   "Pavilion 360 event management services coordinates top-tier food and beverage services, partnering with renowned caterers to provide exceptional culinary experiences that delight attendees and complement the event theme.",
               },
             ].map((service) => (
-              <div
+              <motion.div
                 key={service.title}
+                variants={itemVariants}
                 className="flex flex-col items-center text-center transition-transform duration-300 hover:-translate-y-2"
               >
                 <div
@@ -84,17 +108,31 @@ export default function HomePage() {
                 </div>
                 <h3 className="mb-3 text-xl font-semibold">{service.title}</h3>
                 <p className="text-sm text-muted-foreground">{service.description}</p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Our Clients */}
       <section className="border-y border-border bg-muted/30 py-20 lg:py-32">
         <div className="container mx-auto px-4">
-          <h2 className="mb-12 text-center text-3xl font-bold sm:text-4xl">Our Clients</h2>
-          <div className="grid gap-8 lg:grid-cols-3">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-12 text-center text-3xl font-bold sm:text-4xl"
+          >
+            Our Clients
+          </motion.h2>
+          <motion.div
+            className="grid gap-8 lg:grid-cols-3"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={containerVariants}
+          >
             {[
               {
                 title: "Planners",
@@ -112,12 +150,12 @@ export default function HomePage() {
                   "Pavilion 360 partners with venues to optimize event spaces, ensuring efficient use of resources and seamless event execution. We work hand-in-hand with venue managers to coordinate all aspects of the event.",
               },
             ].map((client) => (
-              <div key={client.title}>
+              <motion.div key={client.title} variants={itemVariants}>
                 <h3 className="mb-4 text-2xl font-semibold">{client.title}</h3>
                 <p className="text-muted-foreground">{client.description}</p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -126,7 +164,13 @@ export default function HomePage() {
 
       {/* CTA Section */}
       <section className="bg-accent py-20 text-accent-foreground lg:py-32">
-        <div className="container mx-auto px-4 text-center">
+        <motion.div
+          className="container mx-auto px-4 text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
           <h2 className="mb-4 text-3xl font-bold sm:text-4xl">
             Indy's premier creative event management, production, & planning solutions
           </h2>
@@ -134,7 +178,7 @@ export default function HomePage() {
           <CtaButton href="/contact" variant="secondary" size="lg">
             Get Started Today
           </CtaButton>
-        </div>
+        </motion.div>
       </section>
     </div>
   )
