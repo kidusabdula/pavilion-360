@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone } from "@/components/icons"
 
 const footerLinks = {
@@ -28,11 +29,15 @@ export function SiteFooter() {
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
           {/* Brand Column */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center space-x-2">
-              <span className="text-2xl font-bold tracking-tight">
-                <span className="text-accent">Pavilion</span>
-                <span className="text-foreground">360</span>
-              </span>
+            <Link href="/" className="flex items-center space-x-2 inline-block">
+              <div className="relative h-10 w-40">
+                <Image
+                  src="/logo.png"
+                  alt="Pavilion 360"
+                  fill
+                  className="object-contain object-left"
+                />
+              </div>
             </Link>
             <p className="mt-4 text-sm text-muted-foreground leading-relaxed max-w-md">
               Full-service event production company in Indianapolis providing AV equipment rentals, lighting, staging,
