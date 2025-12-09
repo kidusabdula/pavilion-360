@@ -27,7 +27,8 @@ export default function ContactPage() {
             >
               <h2 className="mb-8 text-2xl font-bold">Contact Information</h2>
               <div className="space-y-6">
-                <motion.div
+                <motion.a
+                  href="tel:+13174569100"
                   className="flex items-start gap-4 p-4 rounded-xl bg-card border border-border/50 transition-all duration-300 hover:border-accent/30 hover:shadow-lg hover:shadow-accent/5"
                   whileHover={{ x: 4 }}
                 >
@@ -36,16 +37,14 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <p className="mb-1 font-semibold">Phone</p>
-                    <a
-                      href="tel:+13174569100"
-                      className="text-muted-foreground hover:text-accent transition-colors"
-                    >
+                    <p className="text-muted-foreground hover:text-accent transition-colors">
                       (317) 456-9100
-                    </a>
+                    </p>
                   </div>
-                </motion.div>
+                </motion.a>
 
-                <motion.div
+                <motion.a
+                  href="mailto:info@pavilion360.com"
                   className="flex items-start gap-4 p-4 rounded-xl bg-card border border-border/50 transition-all duration-300 hover:border-accent/30 hover:shadow-lg hover:shadow-accent/5"
                   whileHover={{ x: 4 }}
                 >
@@ -54,16 +53,16 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <p className="mb-1 font-semibold">Email</p>
-                    <a
-                      href="mailto:info@pavilion360.com"
-                      className="text-muted-foreground hover:text-accent transition-colors"
-                    >
+                    <p className="text-muted-foreground hover:text-accent transition-colors">
                       info@pavilion360.com
-                    </a>
+                    </p>
                   </div>
-                </motion.div>
+                </motion.a>
 
-                <motion.div
+                <motion.a
+                  href="https://maps.app.goo.gl/CuwLzeA4ywMx98an9"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex items-start gap-4 p-4 rounded-xl bg-card border border-border/50 transition-all duration-300 hover:border-accent/30 hover:shadow-lg hover:shadow-accent/5"
                   whileHover={{ x: 4 }}
                 >
@@ -73,14 +72,15 @@ export default function ContactPage() {
                   <div>
                     <p className="mb-1 font-semibold">Address</p>
                     <p className="text-muted-foreground">
-                      Indianapolis, IN
+                      6002 Corporate Drive
                       <br />
-                      <span className="text-sm">
-                        Serving the greater Indianapolis area & Midwest
-                      </span>
+                      Indianapolis, IN 46278
+                    </p>
+                    <p className="text-xs text-accent mt-1">
+                      View on Google Maps →
                     </p>
                   </div>
-                </motion.div>
+                </motion.a>
 
                 {/* Business Hours */}
                 <motion.div
@@ -135,6 +135,56 @@ export default function ContactPage() {
                 <ContactForm />
               </div>
             </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Google Maps Section */}
+      <section className="border-t border-border">
+        <div className="container mx-auto px-4 py-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-10"
+          >
+            <h2 className="text-2xl font-bold mb-3">Visit Our Location</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Our facility is conveniently located in Indianapolis, serving
+              events throughout the greater Indianapolis area and the Midwest
+              region.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="rounded-2xl overflow-hidden border border-border/50 shadow-lg"
+          >
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3063.759841566882!2d-86.2714!3d39.8904!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x886b5744ba1e4f09%3A0x9a0d6c7c6e8b0d9f!2s6002%20Corporate%20Dr%2C%20Indianapolis%2C%20IN%2046278!5e0!3m2!1sen!2sus!4v1702149600000!5m2!1sen!2sus"
+              width="100%"
+              height="450"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Pavilion360 Location - 6002 Corporate Drive, Indianapolis, IN"
+              className="w-full"
+            />
+          </motion.div>
+
+          <div className="mt-6 text-center">
+            <a
+              href="https://maps.app.goo.gl/CuwLzeA4ywMx98an9"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-accent hover:underline"
+            >
+              <MapPin className="h-4 w-4" />
+              Get Directions on Google Maps
+            </a>
           </div>
         </div>
       </section>
