@@ -1,18 +1,18 @@
 export interface RentalItem {
-  id: string
-  name: string
-  slug: string
-  sku: string
-  category: RentalCategory
-  subcategory?: string
-  thumbnail: string
-  images?: string[]
-  shortDescription: string
-  specs: string[]
-  tags: string[]
-  recommendedEventTypes: EventType[]
-  details?: string
-  popular?: boolean
+  id: string;
+  name: string;
+  slug: string;
+  sku: string;
+  category: RentalCategory;
+  subcategory?: string;
+  thumbnail: string;
+  images?: string[];
+  shortDescription: string;
+  specs: string[];
+  tags: string[];
+  recommendedEventTypes: EventType[];
+  details?: string;
+  popular?: boolean;
 }
 
 export type RentalCategory =
@@ -23,6 +23,8 @@ export type RentalCategory =
   | "Room Dividers"
   | "Pipe & Drape"
   | "Flooring"
+  | "Decks And Foundations"
+  | "Stageline Stages"
   | "Staging"
   | "Trussing"
   | "Crowd Control"
@@ -30,6 +32,22 @@ export type RentalCategory =
   | "Special Effects"
   | "Live Entertainment"
   | "Scenic Decor"
-  | "Food & Beverage"
+  | "Food & Beverage";
 
-export type EventType = "Corporate" | "Wedding" | "Gala" | "Festival" | "Nonprofit" | "Social"
+export type EventType =
+  | "Corporate"
+  | "Wedding"
+  | "Gala"
+  | "Festival"
+  | "Nonprofit"
+  | "Social"
+  | "Concert"
+  | "Outdoor"
+  | "Large Outdoor"
+  | "BBQ"
+  | "Catering"
+  | "Trade Show"
+  | "Red Carpet"
+  | "VIP"
+  | "Club"
+  | "Family";
