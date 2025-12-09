@@ -35,9 +35,9 @@ export function RentalCard({ item }: RentalCardProps) {
       whileHover={{ y: -4 }}
       className="h-full"
     >
-      <Card className="group h-full overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-accent/10 hover:border-accent/30 bg-gradient-to-b from-card to-card/80 border-border/50">
+      <Card className="group h-full overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-accent/10 hover:border-accent/30 bg-linear-to-b from-card to-card/80 border-border/50">
         {/* Image Container */}
-        <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+        <div className="relative aspect-4/3 overflow-hidden bg-muted">
           <Image
             src={item.thumbnail || "/placeholder.svg"}
             alt={altText}
@@ -46,7 +46,7 @@ export function RentalCard({ item }: RentalCardProps) {
             className="object-cover transition-all duration-500 group-hover:scale-110"
           />
           {/* Overlay gradient on hover */}
-          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-linear-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
           {/* Popular badge */}
           {item.popular && (

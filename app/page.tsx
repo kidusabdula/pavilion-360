@@ -41,8 +41,8 @@ const coreServices = [
   {
     title: "Audio / Visual Production",
     icon: Speaker,
-    color: "from-blue-500 to-cyan-400",
-    shadow: "shadow-cyan-500/20",
+    color: "from-yellow-400 to-amber-500",
+    shadow: "shadow-amber-500/20",
     href: "/services/audio-visual-production",
     description:
       "State-of-the-art audio-visual event production services with cutting-edge technology and professional expertise.",
@@ -50,8 +50,8 @@ const coreServices = [
   {
     title: "Event Management",
     icon: Calendar,
-    color: "from-purple-500 to-indigo-400",
-    shadow: "shadow-purple-500/20",
+    color: "from-amber-500 to-orange-500",
+    shadow: "shadow-orange-500/20",
     href: "/services/event-planning-management",
     description:
       "Comprehensive event management solutions from creative development to event production and beyond.",
@@ -59,8 +59,8 @@ const coreServices = [
   {
     title: "Creative Services",
     icon: Sparkles,
-    color: "from-pink-500 to-rose-400",
-    shadow: "shadow-pink-500/20",
+    color: "from-yellow-500 to-yellow-600",
+    shadow: "shadow-yellow-500/20",
     href: "/services/creative-design",
     description:
       "Innovative creative development crafting unique themes, designs, and branding elements for impactful events.",
@@ -68,7 +68,7 @@ const coreServices = [
   {
     title: "Food & Beverage",
     icon: Utensils,
-    color: "from-orange-500 to-amber-400",
+    color: "from-orange-400 to-amber-600",
     shadow: "shadow-orange-500/20",
     href: "/services/beverage-services",
     description:

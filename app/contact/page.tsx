@@ -140,7 +140,7 @@ export default function ContactPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              <div className="rounded-2xl border border-border/50 bg-gradient-to-b from-card to-card/80 p-8 lg:p-10 shadow-lg">
+              <div className="rounded-2xl border border-border/50 bg-linear-to-b from-card to-card/80 p-8 lg:p-10 shadow-lg">
                 <h2 className="mb-2 text-2xl font-bold">Request a Quote</h2>
                 <p className="text-muted-foreground mb-8">
                   Tell us about your event and we'll get back to you with a

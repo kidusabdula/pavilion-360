@@ -38,11 +38,11 @@ export function ServiceCard({ service }: ServiceCardProps) {
       <Link
         href={`/services/${service.slug}`}
         aria-label={`Learn more about ${service.name}`}
-        className="group flex flex-col h-full rounded-xl border border-border/50 bg-gradient-to-b from-card to-card/80 overflow-hidden transition-all duration-500 hover:border-accent/40 hover:shadow-2xl hover:shadow-accent/10"
+        className="group flex flex-col h-full rounded-xl border border-border/50 bg-linear-to-b from-card to-card/80 overflow-hidden transition-all duration-500 hover:border-accent/40 hover:shadow-2xl hover:shadow-accent/10"
       >
         {/* Image or gradient header */}
         <div
-          className={`relative h-32 overflow-hidden bg-gradient-to-br ${gradientColor}`}
+          className={`relative h-32 overflow-hidden bg-linear-to-br ${gradientColor}`}
         >
           {hasImage ? (
             <Image
@@ -53,7 +53,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
               className="object-cover opacity-60 transition-all duration-700 group-hover:scale-110 group-hover:opacity-80"
             />
           ) : (
-            <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-accent/5 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-br from-accent/10 via-accent/5 to-transparent" />
           )}
 
           {/* Decorative element */}
@@ -103,7 +103,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
         </div>
 
         {/* Bottom accent line */}
-        <div className="h-0.5 bg-gradient-to-r from-transparent via-accent/0 to-transparent group-hover:via-accent transition-all duration-500" />
+        <div className="h-0.5 bg-linear-to-r from-transparent via-accent/0 to-transparent group-hover:via-accent transition-all duration-500" />
       </Link>
     </motion.div>
   );

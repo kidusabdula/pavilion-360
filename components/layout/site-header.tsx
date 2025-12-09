@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { Menu, X } from "@/components/icons"
-import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import Link from "next/link";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Menu, X } from "@/components/icons";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const mainNav = [
   { name: "Home", href: "/" },
@@ -14,17 +14,18 @@ const mainNav = [
   { name: "Rentals", href: "/rentals" },
   { name: "Venues", href: "/venues" },
   { name: "Portfolio", href: "/portfolio" },
-]
+  { name: "Resources", href: "/resources" },
+];
 
 export function SiteHeader() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80"
+      className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80"
     >
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
@@ -55,7 +56,11 @@ export function SiteHeader() {
 
           {/* CTA Button */}
           <div className="hidden md:flex md:items-center md:gap-4">
-            <Button asChild variant="default" className="bg-accent text-accent-foreground hover:bg-accent/90">
+            <Button
+              asChild
+              variant="default"
+              className="bg-accent text-accent-foreground hover:bg-accent/90"
+            >
               <Link href="/contact">Contact</Link>
             </Button>
           </div>
@@ -64,10 +69,16 @@ export function SiteHeader() {
           <button
             className="md:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-label={
+              mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"
+            }
             aria-expanded={mobileMenuOpen}
           >
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {mobileMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
           </button>
         </div>
 
@@ -91,8 +102,15 @@ export function SiteHeader() {
                     {item.name}
                   </Link>
                 ))}
-                <Button asChild variant="default" className="bg-accent text-accent-foreground hover:bg-accent/90 mt-2">
-                  <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>
+                <Button
+                  asChild
+                  variant="default"
+                  className="bg-accent text-accent-foreground hover:bg-accent/90 mt-2"
+                >
+                  <Link
+                    href="/contact"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Contact
                   </Link>
                 </Button>
@@ -102,5 +120,5 @@ export function SiteHeader() {
         </AnimatePresence>
       </div>
     </motion.header>
-  )
+  );
 }

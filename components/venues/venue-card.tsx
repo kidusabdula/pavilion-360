@@ -21,9 +21,9 @@ export function VenueCard({ venue }: VenueCardProps) {
       whileHover={{ y: -6 }}
       className="h-full"
     >
-      <div className="group h-full overflow-hidden rounded-xl border border-border/50 bg-gradient-to-b from-card to-card/80 transition-all duration-500 hover:border-accent/40 hover:shadow-2xl hover:shadow-accent/10">
+      <div className="group h-full overflow-hidden rounded-xl border border-border/50 bg-linear-to-b from-card to-card/80 transition-all duration-500 hover:border-accent/40 hover:shadow-2xl hover:shadow-accent/10">
         {/* Image Container */}
-        <div className="relative aspect-[16/10] overflow-hidden">
+        <div className="relative aspect-16/10 overflow-hidden">
           <Image
             src={venue.thumbnail || "/placeholder.svg"}
             alt={altText}
@@ -33,7 +33,7 @@ export function VenueCard({ venue }: VenueCardProps) {
           />
 
           {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-background via-background/30 to-transparent" />
 
           {/* Location badge */}
           <div className="absolute top-4 left-4 z-10">
@@ -90,7 +90,7 @@ export function VenueCard({ venue }: VenueCardProps) {
         </div>
 
         {/* Bottom accent line */}
-        <div className="h-0.5 bg-gradient-to-r from-transparent via-accent/0 to-transparent group-hover:via-accent transition-all duration-500" />
+        <div className="h-0.5 bg-linear-to-r from-transparent via-accent/0 to-transparent group-hover:via-accent transition-all duration-500" />
       </div>
     </motion.div>
   );

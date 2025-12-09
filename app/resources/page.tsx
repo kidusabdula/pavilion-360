@@ -1,12 +1,13 @@
-import type { Metadata } from "next"
-import { HeroSection } from "@/components/shared/hero-section"
-import Link from "next/link"
-import { Book, HelpCircle, FileText } from "@/components/icons"
+import type { Metadata } from "next";
+import { HeroSection } from "@/components/shared/hero-section";
+import Link from "next/link";
+import { Book, HelpCircle, FileText } from "@/components/icons";
 
 export const metadata: Metadata = {
   title: "Resources",
-  description: "Event planning guides, FAQs, and blog articles from Pavilion360 in Indianapolis.",
-}
+  description:
+    "Event planning guides, FAQs, and blog articles from Pavilion360 in Indianapolis.",
+};
 
 export default function ResourcesPage() {
   return (
@@ -21,50 +22,63 @@ export default function ResourcesPage() {
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
           <div className="grid gap-8 sm:grid-cols-3">
-            <Link
-              href="/blog"
-              className="group rounded-lg border border-border bg-card p-8 text-center transition-all hover:border-accent hover:shadow-lg"
-            >
-              <div className="mb-4 flex justify-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent/10">
-                  <Book className="h-8 w-8 text-accent" />
-                </div>
-              </div>
-              <h3 className="mb-3 text-xl font-semibold group-hover:text-accent">Blog</h3>
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                Tips, trends, and insights from our event production experts.
-              </p>
-            </Link>
+            {[
+              {
+                title: "Blog",
+                icon: Book,
+                href: "/blog",
+                desc: "Tips, trends, and insights from our event production experts.",
+              },
+              {
+                title: "FAQs",
+                icon: HelpCircle,
+                href: "/faqs",
+                desc: "Common questions about our services, rentals, and process.",
+              },
+              {
+                title: "Guides",
+                icon: FileText,
+                href: null,
+                desc: "Coming soon: Event planning checklists and guides.",
+              },
+            ].map((item, idx) => {
+              const commonClasses = `block group rounded-xl border border-border/50 bg-linear-to-b from-card to-card/80 p-8 text-center transition-all duration-300 hover:border-accent/30 hover:shadow-xl hover:shadow-accent/5 ${
+                !item.href ? "opacity-80 cursor-default" : ""
+              }`;
 
-            <Link
-              href="/faqs"
-              className="group rounded-lg border border-border bg-card p-8 text-center transition-all hover:border-accent hover:shadow-lg"
-            >
-              <div className="mb-4 flex justify-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent/10">
-                  <HelpCircle className="h-8 w-8 text-accent" />
-                </div>
-              </div>
-              <h3 className="mb-3 text-xl font-semibold group-hover:text-accent">FAQs</h3>
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                Common questions about our services, rentals, and process.
-              </p>
-            </Link>
+              const content = (
+                <>
+                  <div className="mb-6 flex justify-center">
+                    <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-accent/10 transition-colors group-hover:bg-accent group-hover:text-white">
+                      <item.icon className="h-10 w-10 text-accent group-hover:text-white transition-colors" />
+                    </div>
+                  </div>
+                  <h3 className="mb-3 text-2xl font-bold group-hover:text-accent transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">
+                    {item.desc}
+                  </p>
+                </>
+              );
 
-            <div className="group rounded-lg border border-border bg-card p-8 text-center">
-              <div className="mb-4 flex justify-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent/10">
-                  <FileText className="h-8 w-8 text-accent" />
+              return item.href ? (
+                <Link
+                  key={item.title}
+                  href={item.href}
+                  className={commonClasses}
+                >
+                  {content}
+                </Link>
+              ) : (
+                <div key={item.title} className={commonClasses}>
+                  {content}
                 </div>
-              </div>
-              <h3 className="mb-3 text-xl font-semibold">Guides</h3>
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                Coming soon: Event planning checklists and guides.
-              </p>
-            </div>
+              );
+            })}
           </div>
         </div>
       </section>
     </div>
-  )
+  );
 }
