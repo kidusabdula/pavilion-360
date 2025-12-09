@@ -1,13 +1,27 @@
 "use client";
 
+import Script from "next/script";
 import { HeroSection } from "@/components/shared/hero-section";
 import { ContactForm } from "@/components/forms/contact-form";
 import { Mail, Phone, MapPin, Calendar } from "@/components/icons";
 import { motion } from "framer-motion";
+import { generateLocalBusinessSchema } from "@/lib/utils/seo";
 
 export default function ContactPage() {
+  // Generate structured data
+  const localBusinessSchema = generateLocalBusinessSchema();
+
   return (
     <div className="flex flex-col">
+      {/* LocalBusiness Structured Data */}
+      <Script
+        id="localbusiness-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(localBusinessSchema),
+        }}
+      />
+
       <HeroSection
         title="Get in Touch"
         subtitle="Ready to bring your event vision to life? Contact us today."

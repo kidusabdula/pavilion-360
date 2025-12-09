@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import Script from "next/script";
 import { services } from "@/lib/data/services";
 import { HeroSection } from "@/components/shared/hero-section";
 import { ServiceProcessSteps } from "@/components/services/service-process-steps";
@@ -7,6 +8,10 @@ import { ServiceUseCases } from "@/components/services/service-use-cases";
 import { ServicePackages } from "@/components/services/service-packages";
 import Link from "next/link";
 import { ArrowRight } from "@/components/icons";
+import {
+  generateServiceSchema,
+  generateBreadcrumbSchema,
+} from "@/lib/utils/seo";
 
 export async function generateStaticParams() {
   return services.map((service) => ({
@@ -50,8 +55,32 @@ export default function ServiceDetailPage({
     .filter(Boolean)
     .slice(0, 3);
 
+  // Generate structured data
+  const serviceSchema = generateServiceSchema(service);
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: "/" },
+    { name: "Services", url: "/services" },
+    { name: service.name, url: `/services/${service.slug}` },
+  ]);
+
   return (
     <div className="flex flex-col">
+      {/* Structured Data */}
+      <Script
+        id="service-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(serviceSchema),
+        }}
+      />
+      <Script
+        id="breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
+        }}
+      />
+
       <HeroSection
         title={service.name}
         subtitle={service.tagline}
