@@ -137,7 +137,7 @@ export default function RentalsPage() {
         <div className="container mx-auto px-4">
           <div className="flex gap-8">
             {/* Desktop Sidebar */}
-            <aside className="hidden lg:block w-72 flex-shrink-0">
+            <aside className="hidden lg:block w-72 shrink-0">
               <RentalFiltersSidebar
                 selectedCategories={selectedCategories}
                 selectedEventTypes={selectedEventTypes}

@@ -196,7 +196,7 @@ export default function FaqsPage() {
                       >
                         <AccordionItem
                           value={faq.id}
-                          className="rounded-xl border border-border/50 bg-gradient-to-b from-card to-card/80 px-6 transition-all duration-300 hover:border-accent/30 hover:shadow-lg hover:shadow-accent/5 data-[state=open]:border-accent/50"
+                          className="rounded-xl border border-border/50 bg-linear-to-b from-card to-card/80 px-6 transition-all duration-300 hover:border-accent/30 hover:shadow-lg hover:shadow-accent/5 data-[state=open]:border-accent/50"
                         >
                           <AccordionTrigger className="text-left font-semibold hover:no-underline py-5 group">
                             <div className="flex items-start gap-3">

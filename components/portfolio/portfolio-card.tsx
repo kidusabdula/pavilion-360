@@ -13,7 +13,7 @@ interface PortfolioCardProps {
 export function PortfolioCard({ project }: PortfolioCardProps) {
   // Generate SEO-friendly alt text
   const altText = `${project.title} - ${project.eventType} event${
-    project.location ? ` in ${project.location}` : ""
+    project.venue ? ` in ${project.venue}` : ""
   } - Pavilion360 portfolio`;
 
   return (
@@ -26,10 +26,10 @@ export function PortfolioCard({ project }: PortfolioCardProps) {
     >
       <Link
         href={`/portfolio/${project.slug}`}
-        className="group block h-full overflow-hidden rounded-xl border border-border/50 bg-gradient-to-b from-card to-card/80 transition-all duration-500 hover:border-accent/40 hover:shadow-2xl hover:shadow-accent/10"
+        className="group block h-full overflow-hidden rounded-xl border border-border/50 bg-linear-to-b from-card to-card/80 transition-all duration-500 hover:border-accent/40 hover:shadow-2xl hover:shadow-accent/10"
       >
         {/* Image Container */}
-        <div className="relative aspect-[16/10] overflow-hidden">
+        <div className="relative aspect-16/10 overflow-hidden">
           <Image
             src={project.thumbnail || "/placeholder.svg"}
             alt={altText}
@@ -39,7 +39,7 @@ export function PortfolioCard({ project }: PortfolioCardProps) {
           />
 
           {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-60 transition-opacity duration-300 group-hover:opacity-80" />
+          <div className="absolute inset-0 bg-linear-to-t from-background via-background/20 to-transparent opacity-60 transition-opacity duration-300 group-hover:opacity-80" />
 
           {/* Event type badge */}
           <div className="absolute top-4 left-4 z-10">
@@ -72,10 +72,10 @@ export function PortfolioCard({ project }: PortfolioCardProps) {
 
           {/* Meta info */}
           <div className="flex items-center justify-between text-xs text-muted-foreground/70">
-            {project.location && (
+            {project.venue && (
               <span className="flex items-center gap-1">
                 <span className="text-accent">📍</span>
-                {project.location}
+                {project.venue}
               </span>
             )}
             {project.date && <span>{project.date}</span>}
@@ -83,7 +83,7 @@ export function PortfolioCard({ project }: PortfolioCardProps) {
         </div>
 
         {/* Bottom accent line */}
-        <div className="h-0.5 bg-gradient-to-r from-transparent via-accent/0 to-transparent group-hover:via-accent transition-all duration-500" />
+        <div className="h-0.5 bg-linear-to-r from-transparent via-accent/0 to-transparent group-hover:via-accent transition-all duration-500" />
       </Link>
     </motion.div>
   );

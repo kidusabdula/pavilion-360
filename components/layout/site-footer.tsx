@@ -56,15 +56,12 @@ const socialLinks = [
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border bg-gradient-to-b from-muted/30 to-background">
+    <footer className="border-t border-border bg-linear-to-b from-muted/30 to-background">
       <div className="container mx-auto px-4 py-16">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
           {/* Brand Column */}
           <div className="lg:col-span-2">
-            <Link
-              href="/"
-              className="flex items-center space-x-2 inline-block group"
-            >
+            <Link href="/" className="inline-flex items-center space-x-2 group">
               <div className="relative h-10 w-40 transition-transform duration-300 group-hover:scale-105">
                 <Image
                   src="/logo.png"

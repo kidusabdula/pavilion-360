@@ -157,7 +157,7 @@ export default function PortfolioPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 lg:py-20 bg-gradient-to-b from-muted/30 to-background border-t border-border/30">
+      <section className="py-16 lg:py-20 bg-linear-to-b from-muted/30 to-background border-t border-border/30">
         <div className="container mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

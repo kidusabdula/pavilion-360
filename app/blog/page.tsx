@@ -222,10 +222,10 @@ export default function BlogPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
                     whileHover={{ y: -6 }}
-                    className="group rounded-xl border border-border/50 bg-gradient-to-b from-card to-card/80 overflow-hidden transition-all duration-500 hover:border-accent/40 hover:shadow-2xl hover:shadow-accent/10"
+                    className="group rounded-xl border border-border/50 bg-linear-to-b from-card to-card/80 overflow-hidden transition-all duration-500 hover:border-accent/40 hover:shadow-2xl hover:shadow-accent/10"
                   >
                     {/* Image */}
-                    <div className="relative aspect-[16/10] overflow-hidden">
+                    <div className="relative aspect-16/10 overflow-hidden">
                       <Image
                         src={post.image}
                         alt={post.title}
@@ -233,7 +233,7 @@ export default function BlogPage() {
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         className="object-cover transition-all duration-700 group-hover:scale-110"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+                      <div className="absolute inset-0 bg-linear-to-t from-background via-background/30 to-transparent" />
 
                       {/* Category badge */}
                       <div className="absolute top-4 left-4 z-10">
@@ -268,7 +268,7 @@ export default function BlogPage() {
                     </div>
 
                     {/* Bottom accent line */}
-                    <div className="h-0.5 bg-gradient-to-r from-transparent via-accent/0 to-transparent group-hover:via-accent transition-all duration-500" />
+                    <div className="h-0.5 bg-linear-to-r from-transparent via-accent/0 to-transparent group-hover:via-accent transition-all duration-500" />
                   </motion.article>
                 ))}
               </motion.div>
