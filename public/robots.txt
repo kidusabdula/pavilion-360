@@ -1,0 +1,20 @@
+# Pavilion360 - Indianapolis Event Production Company
+# https://pavilion360.events
+
+User-agent: *
+Allow: /
+
+# Disallow admin/internal pages
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+
+# Allow all images
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.png$
+Allow: /*.webp$
+Allow: /*.svg$
+
+# Sitemap location
+Sitemap: https://pavilion360.events/sitemap.xml

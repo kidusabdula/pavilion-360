@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Script from "next/script";
 import { HeroSection } from "@/components/shared/hero-section";
 import {
   Accordion,
@@ -13,6 +14,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, HelpCircle } from "@/components/icons";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { generateFAQSchema } from "@/lib/utils/seo";
 
 // Get unique categories from FAQs
 const categories = [
@@ -57,8 +59,22 @@ export default function FaqsPage() {
     setActiveCategory("All");
   };
 
+  // Generate FAQ structured data
+  const faqSchema = generateFAQSchema(
+    faqs.map((faq) => ({ question: faq.question, answer: faq.answer }))
+  );
+
   return (
     <div className="flex flex-col">
+      {/* FAQ Structured Data */}
+      <Script
+        id="faq-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqSchema),
+        }}
+      />
+
       <HeroSection
         title="Frequently Asked Questions"
         subtitle="Quick answers to common questions about our services and process."
