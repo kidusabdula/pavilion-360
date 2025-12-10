@@ -60,8 +60,8 @@ export function HeroSection({
           {overlay && (
             <>
               {/* Premium multi-layer gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-b from-background via-background/70 to-background/90" />
-              <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-background/40" />
+              <div className="absolute inset-0 bg-linear-to-b from-background via-background/70 to-background/90" />
+              <div className="absolute inset-0 bg-linear-to-r from-background/80 via-transparent to-background/40" />
               {/* Subtle noise texture for premium feel */}
               <div
                 className="absolute inset-0 opacity-[0.015] mix-blend-overlay"
@@ -76,7 +76,7 @@ export function HeroSection({
       )}
 
       {/* Decorative accent line */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-accent/50 to-transparent" />
 
       {/* Content */}
       <motion.div
@@ -96,7 +96,7 @@ export function HeroSection({
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
             {typeof title === "string" ? (
-              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl bg-gradient-to-br from-foreground via-foreground to-foreground/70 bg-clip-text">
+              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl bg-linear-to-br from-foreground via-foreground to-foreground/70 bg-clip-text">
                 {title}
               </h1>
             ) : (
@@ -139,7 +139,7 @@ export function HeroSection({
       </motion.div>
 
       {/* Bottom fade for smooth transition */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-background to-transparent pointer-events-none" />
     </section>
   );
 }

@@ -27,10 +27,10 @@ export function RentalCardCompact({ item }: RentalCardCompactProps) {
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3 }}
       whileHover={{ x: 4 }}
-      className="group flex gap-4 p-4 bg-gradient-to-r from-card to-card/80 border border-border/50 rounded-xl transition-all duration-300 hover:shadow-xl hover:shadow-accent/5 hover:border-accent/30"
+      className="group flex gap-4 p-4 bg-linear-to-r from-card to-card/80 border border-border/50 rounded-xl transition-all duration-300 hover:shadow-xl hover:shadow-accent/5 hover:border-accent/30"
     >
       {/* Image */}
-      <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0 overflow-hidden rounded-lg bg-muted">
+      <div className="relative w-24 h-24 sm:w-28 sm:h-28 shrink-0 overflow-hidden rounded-lg bg-muted">
         <Image
           src={item.thumbnail || "/placeholder.svg"}
           alt={altText}
@@ -39,10 +39,10 @@ export function RentalCardCompact({ item }: RentalCardCompactProps) {
           className="object-cover transition-transform duration-500 group-hover:scale-110"
         />
         {/* Subtle overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute inset-0 bg-linear-to-t from-background/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
         {/* Category indicator */}
-        <div className="absolute bottom-0 left-0 right-0 p-1.5 bg-gradient-to-t from-background/90 to-transparent">
+        <div className="absolute bottom-0 left-0 right-0 p-1.5 bg-linear-to-t from-background/90 to-transparent">
           <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
             {item.category.split(" ")[0]}
           </span>
@@ -62,7 +62,7 @@ export function RentalCardCompact({ item }: RentalCardCompactProps) {
               </p>
             </div>
             {item.popular && (
-              <Badge className="text-[10px] px-1.5 py-0.5 flex-shrink-0 bg-accent/10 text-accent border-accent/20">
+              <Badge className="text-[10px] px-1.5 py-0.5 shrink-0 bg-accent/10 text-accent border-accent/20">
                 ★ Popular
               </Badge>
             )}
@@ -93,7 +93,7 @@ export function RentalCardCompact({ item }: RentalCardCompactProps) {
       </div>
 
       {/* Action */}
-      <div className="flex items-center flex-shrink-0">
+      <div className="flex items-center shrink-0">
         <Button
           onClick={() => addItem(item)}
           disabled={isInBasket}

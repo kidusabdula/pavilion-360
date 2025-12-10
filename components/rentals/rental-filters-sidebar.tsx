@@ -63,7 +63,7 @@ export function RentalFiltersSidebar({
   const hasActiveFilters = totalActiveFilters > 0;
 
   return (
-    <div className="w-full bg-gradient-to-b from-card to-card/80 border border-border/50 rounded-xl p-5 h-fit sticky top-20 shadow-lg">
+    <div className="w-full bg-linear-to-b from-card to-card/80 border border-border/50 rounded-xl p-5 h-fit sticky top-20 shadow-lg">
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
