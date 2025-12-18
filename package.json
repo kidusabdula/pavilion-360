@@ -1,12 +1,15 @@
 {
-  "name": "pavilion360-website-build",
-  "version": "0.1.0",
+  "name": "pavilion360-web",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "build": "next build",
     "dev": "next dev",
     "lint": "eslint .",
-    "start": "next start"
+    "start": "next start",
+    "generate-types": "npx tsx scripts/generate-types.ts",
+    "supabase:login": "npx supabase login",
+    "supabase:types": "npx supabase gen types typescript --project-id $SUPABASE_PROJECT_REF --schema public > lib/supabase/database.types.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
