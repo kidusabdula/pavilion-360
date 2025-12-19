@@ -1,44 +1,45 @@
 // components/cms/modules/services/service-form.tsx
 // Reusable service form for create/edit
-'use client';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useForm, useFieldArray } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Plus, Trash2, GripVertical } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
+"use client";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useForm, useFieldArray } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2, Plus, Trash2, GripVertical } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
+import { ImageUpload } from "@/components/cms/forms";
 import {
   createServiceSchema,
   type CreateServiceInput,
-} from '@/lib/schemas/service.schema';
-import { generateSlug } from '@/lib/utils/slug';
-import { cn } from '@/lib/utils/cn';
+} from "@/lib/schemas/service.schema";
+import { generateSlug } from "@/lib/utils/slug";
+import { cn } from "@/lib/utils/cn";
 
 // Icon options for services
 const iconOptions = [
-  'calendar',
-  'briefcase',
-  'sparkles',
-  'music',
-  'video',
-  'mic',
-  'camera',
-  'lightbulb',
-  'heart',
-  'star',
-  'zap',
-  'award',
+  "calendar",
+  "briefcase",
+  "sparkles",
+  "music",
+  "video",
+  "mic",
+  "camera",
+  "lightbulb",
+  "heart",
+  "star",
+  "zap",
+  "award",
 ];
 
 interface ServiceFormProps {
@@ -55,20 +56,20 @@ export function ServiceForm({
   isEdit,
 }: ServiceFormProps) {
   const router = useRouter();
-  
+
   const form = useForm<CreateServiceInput>({
     resolver: zodResolver(createServiceSchema),
     defaultValues: {
-      name: initialData?.name || '',
-      slug: initialData?.slug || '',
-      tagline: initialData?.tagline || '',
-      description: initialData?.description || '',
-      icon: initialData?.icon || 'calendar',
-      thumbnail_url: initialData?.thumbnail_url || '',
+      name: initialData?.name || "",
+      slug: initialData?.slug || "",
+      tagline: initialData?.tagline || "",
+      description: initialData?.description || "",
+      icon: initialData?.icon || "calendar",
+      thumbnail_url: initialData?.thumbnail_url || "",
       what_we_do: initialData?.what_we_do || [],
       gallery: initialData?.gallery || [],
-      seo_title: initialData?.seo_title || '',
-      seo_description: initialData?.seo_description || '',
+      seo_title: initialData?.seo_title || "",
+      seo_description: initialData?.seo_description || "",
       display_order: initialData?.display_order || 0,
       is_active: initialData?.is_active ?? true,
       use_cases: initialData?.use_cases || [],
@@ -76,7 +77,7 @@ export function ServiceForm({
       packages: initialData?.packages || [],
     },
   });
-  
+
   const {
     register,
     handleSubmit,
@@ -84,65 +85,74 @@ export function ServiceForm({
     setValue,
     formState: { errors },
   } = form;
-  
+
   // Field arrays for nested data
   const {
     fields: whatWeDoFields,
     append: appendWhatWeDo,
     remove: removeWhatWeDo,
-  } = useFieldArray({ control: form.control, name: 'what_we_do' as never });
-  
+  } = useFieldArray({ control: form.control, name: "what_we_do" as never });
+
   const {
     fields: useCaseFields,
     append: appendUseCase,
     remove: removeUseCase,
-  } = useFieldArray({ control: form.control, name: 'use_cases' });
-  
+  } = useFieldArray({ control: form.control, name: "use_cases" });
+
   const {
     fields: processStepFields,
     append: appendProcessStep,
     remove: removeProcessStep,
-  } = useFieldArray({ control: form.control, name: 'process_steps' });
-  
+  } = useFieldArray({ control: form.control, name: "process_steps" });
+
   // Auto-generate slug from name
-  const name = watch('name');
+  const name = watch("name");
   useEffect(() => {
     if (!isEdit && name && !initialData?.slug) {
-      setValue('slug', generateSlug(name));
+      setValue("slug", generateSlug(name));
     }
   }, [name, isEdit, setValue, initialData?.slug]);
-  
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="max-w-3xl space-y-8">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full max-w-4xl space-y-8"
+    >
       {/* Basic Information */}
       <div className="rounded-xl border border-border bg-card p-6">
         <h2 className="mb-6 text-lg font-semibold">Basic Information</h2>
         <div className="space-y-4">
           {/* Name */}
           <div className="space-y-2">
-            <Label htmlFor="name" className="after:ml-0.5 after:text-red-500 after:content-['*']">
+            <Label
+              htmlFor="name"
+              className="after:ml-0.5 after:text-red-500 after:content-['*']"
+            >
               Name
             </Label>
             <Input
               id="name"
-              {...register('name')}
+              {...register("name")}
               placeholder="Event Planning & Management"
             />
             {errors.name && (
               <p className="text-sm text-red-500">{errors.name.message}</p>
             )}
           </div>
-          
+
           {/* Slug */}
           <div className="space-y-2">
-            <Label htmlFor="slug" className="after:ml-0.5 after:text-red-500 after:content-['*']">
+            <Label
+              htmlFor="slug"
+              className="after:ml-0.5 after:text-red-500 after:content-['*']"
+            >
               Slug
             </Label>
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">/services/</span>
               <Input
                 id="slug"
-                {...register('slug')}
+                {...register("slug")}
                 placeholder="event-planning"
                 className="font-mono"
               />
@@ -151,39 +161,44 @@ export function ServiceForm({
               <p className="text-sm text-red-500">{errors.slug.message}</p>
             )}
           </div>
-          
+
           {/* Tagline */}
           <div className="space-y-2">
             <Label htmlFor="tagline">Tagline</Label>
             <Input
               id="tagline"
-              {...register('tagline')}
+              {...register("tagline")}
               placeholder="Making your events unforgettable"
             />
           </div>
-          
+
           {/* Description */}
           <div className="space-y-2">
-            <Label htmlFor="description" className="after:ml-0.5 after:text-red-500 after:content-['*']">
+            <Label
+              htmlFor="description"
+              className="after:ml-0.5 after:text-red-500 after:content-['*']"
+            >
               Description
             </Label>
             <Textarea
               id="description"
-              {...register('description')}
+              {...register("description")}
               placeholder="Full description of the service..."
               rows={5}
             />
             {errors.description && (
-              <p className="text-sm text-red-500">{errors.description.message}</p>
+              <p className="text-sm text-red-500">
+                {errors.description.message}
+              </p>
             )}
           </div>
-          
+
           {/* Icon */}
           <div className="space-y-2">
             <Label htmlFor="icon">Icon</Label>
             <Select
-              value={watch('icon')}
-              onValueChange={(value) => setValue('icon', value)}
+              value={watch("icon")}
+              onValueChange={(value) => setValue("icon", value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select an icon" />
@@ -199,26 +214,22 @@ export function ServiceForm({
           </div>
         </div>
       </div>
-      
+
       {/* Media */}
       <div className="rounded-xl border border-border bg-card p-6">
         <h2 className="mb-6 text-lg font-semibold">Media</h2>
         <div className="space-y-4">
-          {/* Thumbnail URL */}
-          <div className="space-y-2">
-            <Label htmlFor="thumbnail_url">Thumbnail URL</Label>
-            <Input
-              id="thumbnail_url"
-              {...register('thumbnail_url')}
-              placeholder="https://example.com/image.jpg"
-            />
-            <p className="text-xs text-muted-foreground">
-              Enter the URL of the thumbnail image
-            </p>
-          </div>
+          {/* Thumbnail */}
+          <ImageUpload
+            label="Thumbnail Image"
+            value={watch("thumbnail_url") || null}
+            onChange={(url) => setValue("thumbnail_url", url || "")}
+            folder="services"
+            aspectRatio="video"
+          />
         </div>
       </div>
-      
+
       {/* What We Do */}
       <div className="rounded-xl border border-border bg-card p-6">
         <div className="mb-4 flex items-center justify-between">
@@ -227,7 +238,7 @@ export function ServiceForm({
             type="button"
             variant="outline"
             size="sm"
-            onClick={() => appendWhatWeDo('' as never)}
+            onClick={() => appendWhatWeDo("" as never)}
           >
             <Plus className="mr-2 h-4 w-4" />
             Add Item
@@ -258,7 +269,7 @@ export function ServiceForm({
           )}
         </div>
       </div>
-      
+
       {/* Use Cases */}
       <div className="rounded-xl border border-border bg-card p-6">
         <div className="mb-4 flex items-center justify-between">
@@ -269,8 +280,8 @@ export function ServiceForm({
             size="sm"
             onClick={() =>
               appendUseCase({
-                title: '',
-                description: '',
+                title: "",
+                description: "",
                 display_order: useCaseFields.length,
               })
             }
@@ -286,7 +297,9 @@ export function ServiceForm({
               className="rounded-lg border border-border bg-muted/20 p-4"
             >
               <div className="mb-3 flex items-center justify-between">
-                <span className="text-sm font-medium">Use Case {index + 1}</span>
+                <span className="text-sm font-medium">
+                  Use Case {index + 1}
+                </span>
                 <Button
                   type="button"
                   variant="ghost"
@@ -316,7 +329,7 @@ export function ServiceForm({
           )}
         </div>
       </div>
-      
+
       {/* Process Steps */}
       <div className="rounded-xl border border-border bg-card p-6">
         <div className="mb-4 flex items-center justify-between">
@@ -328,8 +341,8 @@ export function ServiceForm({
             onClick={() =>
               appendProcessStep({
                 step_number: processStepFields.length + 1,
-                title: '',
-                description: '',
+                title: "",
+                description: "",
               })
             }
           >
@@ -386,7 +399,7 @@ export function ServiceForm({
           )}
         </div>
       </div>
-      
+
       {/* Settings */}
       <div className="rounded-xl border border-border bg-card p-6">
         <h2 className="mb-6 text-lg font-semibold">Settings</h2>
@@ -397,14 +410,14 @@ export function ServiceForm({
             <Input
               id="display_order"
               type="number"
-              {...register('display_order', { valueAsNumber: true })}
+              {...register("display_order", { valueAsNumber: true })}
               min={0}
             />
             <p className="text-xs text-muted-foreground">
               Lower numbers appear first
             </p>
           </div>
-          
+
           {/* Active Toggle */}
           <div className="flex items-center justify-between rounded-lg border border-border p-4">
             <div>
@@ -415,13 +428,13 @@ export function ServiceForm({
             </div>
             <Switch
               id="is_active"
-              checked={watch('is_active')}
-              onCheckedChange={(checked) => setValue('is_active', checked)}
+              checked={watch("is_active") ?? true}
+              onCheckedChange={(checked) => setValue("is_active", checked)}
             />
           </div>
         </div>
       </div>
-      
+
       {/* SEO */}
       <div className="rounded-xl border border-border bg-card p-6">
         <h2 className="mb-6 text-lg font-semibold">SEO</h2>
@@ -431,20 +444,20 @@ export function ServiceForm({
             <Label htmlFor="seo_title">SEO Title</Label>
             <Input
               id="seo_title"
-              {...register('seo_title')}
+              {...register("seo_title")}
               placeholder="Custom SEO title (optional)"
             />
             <p className="text-xs text-muted-foreground">
               Leave empty to use the service name
             </p>
           </div>
-          
+
           {/* SEO Description */}
           <div className="space-y-2">
             <Label htmlFor="seo_description">SEO Description</Label>
             <Textarea
               id="seo_description"
-              {...register('seo_description')}
+              {...register("seo_description")}
               placeholder="Custom SEO description (optional)"
               rows={3}
             />
@@ -454,19 +467,15 @@ export function ServiceForm({
           </div>
         </div>
       </div>
-      
+
       {/* Form Actions */}
       <div className="flex justify-end gap-3">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => router.back()}
-        >
+        <Button type="button" variant="outline" onClick={() => router.back()}>
           Cancel
         </Button>
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {isEdit ? 'Update Service' : 'Create Service'}
+          {isEdit ? "Update Service" : "Create Service"}
         </Button>
       </div>
     </form>
