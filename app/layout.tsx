@@ -89,6 +89,7 @@ export const metadata: Metadata = {
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { QuoteBasketProvider } from "@/lib/context/quote-basket-context";
+import { Providers } from "@/components/providers";
 
 // Organization structured data
 const organizationSchema = {
@@ -166,16 +167,18 @@ export default function RootLayout({
         />
       </head>
       <body className={`font-sans antialiased ${_geistMono.className}`}>
-        <QuoteBasketProvider>
-          <a href="#main-content" className="skip-to-content">
-            Skip to main content
-          </a>
-          <SiteHeader />
-          <main id="main-content" className="min-h-screen">
-            {children}
-          </main>
-          <SiteFooter />
-        </QuoteBasketProvider>
+        <Providers>
+          <QuoteBasketProvider>
+            <a href="#main-content" className="skip-to-content">
+              Skip to main content
+            </a>
+            <SiteHeader />
+            <main id="main-content" className="min-h-screen">
+              {children}
+            </main>
+            <SiteFooter />
+          </QuoteBasketProvider>
+        </Providers>
       </body>
     </html>
   );
