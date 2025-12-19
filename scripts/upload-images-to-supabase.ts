@@ -1,9 +1,11 @@
-// scripts/upload-images-to-supabase.ts
-// Script to upload all public images to Supabase Storage and generate URL mapping
-
 import { createClient } from "@supabase/supabase-js";
+import * as dotenv from "dotenv";
 import * as fs from "fs";
 import * as path from "path";
+
+// Load environment variables
+dotenv.config();
+dotenv.config({ path: ".env.local", override: true });
 
 // Configuration - update these with your Supabase credentials
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
