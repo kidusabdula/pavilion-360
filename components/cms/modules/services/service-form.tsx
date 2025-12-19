@@ -116,7 +116,7 @@ export function ServiceForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-full max-w-4xl space-y-8"
+      className="w-full max-w-6xl space-y-8"
     >
       {/* Basic Information */}
       <div className="rounded-xl border border-border bg-card p-6">

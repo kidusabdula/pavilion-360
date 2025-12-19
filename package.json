@@ -8,6 +8,7 @@
     "lint": "eslint .",
     "start": "next start",
     "generate-types": "npx tsx scripts/generate-types.ts",
+    "upload-images": "npx tsx scripts/upload-images-to-supabase.ts",
     "supabase:login": "npx supabase login",
     "supabase:types": "npx supabase gen types typescript --project-id $SUPABASE_PROJECT_REF --schema public > lib/supabase/database.types.ts"
   },

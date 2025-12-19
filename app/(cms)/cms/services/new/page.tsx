@@ -25,7 +25,7 @@ export default function NewServicePage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PageHeader
         title="New Service"
         description="Create a new service offering"
