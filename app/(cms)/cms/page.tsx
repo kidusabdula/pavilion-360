@@ -1,168 +1,156 @@
-// app/(cms)/cms/services/page.tsx
-// CMS Services list page
-'use client';
-import { useState } from 'react';
-import Link from 'next/link';
-import { Plus, Briefcase } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { PageHeader } from '@/components/cms/shared/page-header';
-import { DataTable, TableThumbnail } from '@/components/cms/shared/data-table';
-import { EmptyState } from '@/components/cms/shared/empty-state';
-import { LoadingSkeleton } from '@/components/cms/shared/loading-skeleton';
-import { ConfirmDialog } from '@/components/cms/shared/confirm-dialog';
-import { StatusBadge } from '@/components/cms/shared/status-badge';
-import { useServices, useDeleteService } from '@/hooks/cms/use-services';
-import { toast } from 'sonner';
-import type { Tables } from '@/lib/supabase/types';
+// app/(cms)/cms/page.tsx
+"use client";
+import { PageHeader } from "@/components/cms/shared/page-header";
+import {
+  Users,
+  Briefcase,
+  Package,
+  Quote,
+  Plus,
+  ArrowUpRight,
+  Eye,
+  MessageSquare,
+  ShoppingCart,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { motion } from "framer-motion";
 
-type Service = Tables<'services'>;
+const stats = [
+  {
+    label: "Total Services",
+    value: "12",
+    icon: Briefcase,
+    color: "text-blue-500",
+    bg: "bg-blue-500/10",
+  },
+  {
+    label: "Active Rentals",
+    value: "45",
+    icon: Package,
+    color: "text-orange-500",
+    bg: "bg-orange-500/10",
+  },
+  {
+    label: "Testimonials",
+    value: "128",
+    icon: Quote,
+    color: "text-green-500",
+    bg: "bg-green-500/10",
+  },
+  {
+    label: "Team Members",
+    value: "18",
+    icon: Users,
+    color: "text-purple-500",
+    bg: "bg-purple-500/10",
+  },
+];
 
-export default function ServicesPage() {
-  const [deleteTarget, setDeleteTarget] = useState<Service | null>(null);
-  const { data, isLoading, error } = useServices();
-  const deleteMutation = useDeleteService();
-  
-  const services = data?.data || [];
-  
-  const handleDelete = async () => {
-    if (!deleteTarget) return;
-    
-    try {
-      await deleteMutation.mutateAsync(deleteTarget.id);
-      toast.success('Service deleted successfully');
-      setDeleteTarget(null);
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to delete service');
-    }
-  };
-  
-  if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <PageHeader
-          title="Services"
-          description="Manage your service offerings"
-          breadcrumbs={[{ label: 'Services' }]}
-        />
-        <LoadingSkeleton type="table" />
+const quickActions = [
+  { title: "Add Service", href: "/cms/services/new", icon: Plus },
+  { title: "New Rental", href: "/cms/rentals/new", icon: Plus },
+  { title: "View Quotes", href: "/cms/quotes", icon: ShoppingCart },
+  { title: "Messages", href: "/cms/inquiries", icon: MessageSquare },
+];
+
+export default function DashboardPage() {
+  return (
+    <div className="space-y-8 p-4">
+      <PageHeader
+        title="Dashboard"
+        description="Welcome back! Here's what's happening today."
+        breadcrumbs={[{ label: "Dashboard" }]}
+      />
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {stats.map((stat, i) => (
+          <motion.div
+            key={stat.label}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.1 }}
+            className="rounded-xl border border-border bg-card p-6 shadow-sm"
+          >
+            <div className="flex items-center gap-4">
+              <div className={`rounded-lg ${stat.bg} p-2.5 ${stat.color}`}>
+                <stat.icon className="h-6 w-6" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  {stat.label}
+                </p>
+                <h3 className="text-2xl font-bold">{stat.value}</h3>
+              </div>
+            </div>
+          </motion.div>
+        ))}
       </div>
-    );
-  }
-  
-  if (error) {
-    return (
-      <div className="space-y-6">
-        <PageHeader
-          title="Services"
-          description="Manage your service offerings"
-          breadcrumbs={[{ label: 'Services' }]}
-        />
-        <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-6 text-center">
-          <p className="text-red-500">Failed to load services: {error.message}</p>
+
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        {/* Quick Actions */}
+        <div className="lg:col-span-1 space-y-4">
+          <h2 className="text-lg font-semibold">Quick Actions</h2>
+          <div className="grid grid-cols-1 gap-3">
+            {quickActions.map((action) => (
+              <Button
+                key={action.title}
+                asChild
+                variant="outline"
+                className="h-auto justify-between p-4 hover:border-primary/50"
+              >
+                <Link href={action.href}>
+                  <div className="flex items-center gap-3">
+                    <div className="rounded-full bg-muted p-1">
+                      <action.icon className="h-4 w-4" />
+                    </div>
+                    <span>{action.title}</span>
+                  </div>
+                  <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
+                </Link>
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {/* Placeholder for Recent Activity */}
+        <div className="lg:col-span-2 space-y-4">
+          <h2 className="text-lg font-semibold">Recent Activity</h2>
+          <div className="rounded-xl border border-border bg-card">
+            <div className="flex flex-col">
+              {[1, 2, 3, 4].map((item, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between border-b border-border p-4 last:border-0"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+                      <Eye className="h-5 w-5 text-muted-foreground" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">
+                        New quote request received
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        2 hours ago
+                      </p>
+                    </div>
+                  </div>
+                  <Button variant="ghost" size="sm">
+                    View
+                  </Button>
+                </div>
+              ))}
+            </div>
+            <div className="border-t border-border p-3 text-center">
+              <Button variant="link" size="sm" asChild>
+                <Link href="/cms/quotes">View all activity</Link>
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
-    );
-  }
-  
-  return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Services"
-        description="Manage your service offerings"
-        breadcrumbs={[{ label: 'Services' }]}
-        actions={
-          <Button asChild>
-            <Link href="/cms/services/new">
-              <Plus className="mr-2 h-4 w-4" />
-              Add Service
-            </Link>
-          </Button>
-        }
-      />
-      
-      {services.length === 0 ? (
-        <EmptyState
-          icon={Briefcase}
-          title="No services yet"
-          description="Get started by creating your first service."
-          action={{ label: 'Add Service', href: '/cms/services/new' }}
-        />
-      ) : (
-        <DataTable
-          data={services}
-          baseUrl="/cms/services"
-          searchPlaceholder="Search services..."
-          searchKey="name"
-          showViewButton
-          viewUrl={(service) => `/services/${service.slug}`}
-          onDelete={(service) => setDeleteTarget(service)}
-          columns={[
-            {
-              key: 'thumbnail',
-              label: '',
-              className: 'w-16',
-              render: (service) => (
-                <TableThumbnail
-                  src={service.thumbnail_url}
-                  alt={service.name}
-                  fallback={service.name.charAt(0)}
-                />
-              ),
-            },
-            {
-              key: 'name',
-              label: 'Name',
-              render: (service) => (
-                <div>
-                  <p className="font-medium">{service.name}</p>
-                  <p className="text-xs text-muted-foreground">{service.slug}</p>
-                </div>
-              ),
-            },
-            {
-              key: 'tagline',
-              label: 'Tagline',
-              className: 'hidden md:table-cell max-w-xs',
-              render: (service) => (
-                <p className="truncate text-muted-foreground">
-                  {service.tagline || '—'}
-                </p>
-              ),
-            },
-            {
-              key: 'is_active',
-              label: 'Status',
-              className: 'hidden sm:table-cell',
-              render: (service) => (
-                <StatusBadge
-                  status={service.is_active ? 'active' : 'inactive'}
-                />
-              ),
-            },
-            {
-              key: 'view_count',
-              label: 'Views',
-              className: 'hidden lg:table-cell text-right',
-              render: (service) => (
-                <span className="text-muted-foreground">
-                  {service.view_count?.toLocaleString() || 0}
-                </span>
-              ),
-            },
-          ]}
-        />
-      )}
-      
-      <ConfirmDialog
-        open={!!deleteTarget}
-        onOpenChange={(open) => !open && setDeleteTarget(null)}
-        title="Delete Service?"
-        description={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`}
-        confirmLabel="Delete"
-        variant="destructive"
-        onConfirm={handleDelete}
-        isLoading={deleteMutation.isPending}
-      />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 // components/cms/shared/loading-skeleton.tsx
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function TableSkeleton({ rows = 5 }: { rows?: number }) {
   return (
@@ -9,7 +9,7 @@ export function TableSkeleton({ rows = 5 }: { rows?: number }) {
         <Skeleton className="h-9 w-64" />
         <Skeleton className="h-9 w-24" />
       </div>
-      
+
       {/* Table Header Skeleton */}
       <div className="flex items-center gap-4 border-b border-border bg-muted/30 px-4 py-3">
         <Skeleton className="h-4 w-4" />
@@ -18,7 +18,7 @@ export function TableSkeleton({ rows = 5 }: { rows?: number }) {
         <Skeleton className="h-4 w-24" />
         <Skeleton className="h-4 w-20" />
       </div>
-      
+
       {/* Table Rows Skeleton */}
       {Array.from({ length: rows }).map((_, i) => (
         <div
@@ -35,7 +35,7 @@ export function TableSkeleton({ rows = 5 }: { rows?: number }) {
           <Skeleton className="h-8 w-8 rounded-md" />
         </div>
       ))}
-      
+
       {/* Pagination Skeleton */}
       <div className="flex items-center justify-between border-t border-border p-4">
         <Skeleton className="h-4 w-32" />
@@ -70,7 +70,7 @@ export function FormSkeleton() {
           </div>
         </div>
       </div>
-      
+
       {/* Action Buttons */}
       <div className="flex justify-end gap-3">
         <Skeleton className="h-10 w-24" />
@@ -95,7 +95,7 @@ export function DetailSkeleton() {
           <Skeleton className="h-10 w-20" />
         </div>
       </div>
-      
+
       {/* Content Grid */}
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
@@ -131,4 +131,24 @@ export function CardSkeleton() {
       <Skeleton className="h-4 w-3/4" />
     </div>
   );
+}
+
+interface LoadingSkeletonProps {
+  type: "table" | "form" | "detail" | "card";
+  rows?: number;
+}
+
+export function LoadingSkeleton({ type, rows }: LoadingSkeletonProps) {
+  switch (type) {
+    case "table":
+      return <TableSkeleton rows={rows} />;
+    case "form":
+      return <FormSkeleton />;
+    case "detail":
+      return <DetailSkeleton />;
+    case "card":
+      return <CardSkeleton />;
+    default:
+      return null;
+  }
 }
