@@ -146,11 +146,15 @@ function generateSqlUpdates(urlMapping: Record<string, string>) {
 
   let sql = `-- Auto-generated SQL to update image URLs to Supabase Storage
 -- Generated on: ${new Date().toISOString()}
--- Run this after seed-services.sql to update all image URLs
+-- Run this AFTER seed-services.sql and seed-all-data.sql to update all image URLs
 
 `;
 
-  // Update services thumbnail_url
+  // SERVICES
+  sql += `-- ============================================================================\n`;
+  sql += `-- SERVICES\n`;
+  sql += `-- ============================================================================\n\n`;
+
   sql += `-- Update services thumbnail URLs\n`;
   for (const [oldUrl, newUrl] of Object.entries(urlMapping)) {
     sql += `UPDATE services SET thumbnail_url = '${newUrl}' WHERE thumbnail_url = '${oldUrl}';\n`;
@@ -164,6 +168,56 @@ function generateSqlUpdates(urlMapping: Record<string, string>) {
   sql += `\n-- Update service_use_cases image URLs\n`;
   for (const [oldUrl, newUrl] of Object.entries(urlMapping)) {
     sql += `UPDATE service_use_cases SET image_url = '${newUrl}' WHERE image_url = '${oldUrl}';\n`;
+  }
+
+  // RENTALS
+  sql += `\n-- ============================================================================\n`;
+  sql += `-- RENTAL ITEMS\n`;
+  sql += `-- ============================================================================\n\n`;
+
+  sql += `-- Update rental_items thumbnail URLs\n`;
+  for (const [oldUrl, newUrl] of Object.entries(urlMapping)) {
+    sql += `UPDATE rental_items SET thumbnail_url = '${newUrl}' WHERE thumbnail_url = '${oldUrl}';\n`;
+  }
+
+  sql += `\n-- Update rental_items images arrays\n`;
+  for (const [oldUrl, newUrl] of Object.entries(urlMapping)) {
+    sql += `UPDATE rental_items SET images = array_replace(images, '${oldUrl}', '${newUrl}');\n`;
+  }
+
+  // PORTFOLIO
+  sql += `\n-- ============================================================================\n`;
+  sql += `-- PORTFOLIO PROJECTS\n`;
+  sql += `-- ============================================================================\n\n`;
+
+  sql += `-- Update portfolio_projects thumbnail URLs\n`;
+  for (const [oldUrl, newUrl] of Object.entries(urlMapping)) {
+    sql += `UPDATE portfolio_projects SET thumbnail_url = '${newUrl}' WHERE thumbnail_url = '${oldUrl}';\n`;
+  }
+
+  sql += `\n-- Update portfolio_projects gallery arrays\n`;
+  for (const [oldUrl, newUrl] of Object.entries(urlMapping)) {
+    sql += `UPDATE portfolio_projects SET gallery = array_replace(gallery, '${oldUrl}', '${newUrl}');\n`;
+  }
+
+  // VENUES
+  sql += `\n-- ============================================================================\n`;
+  sql += `-- VENUES\n`;
+  sql += `-- ============================================================================\n\n`;
+
+  sql += `-- Update venues thumbnail URLs\n`;
+  for (const [oldUrl, newUrl] of Object.entries(urlMapping)) {
+    sql += `UPDATE venues SET thumbnail_url = '${newUrl}' WHERE thumbnail_url = '${oldUrl}';\n`;
+  }
+
+  // RENTAL CATEGORIES
+  sql += `\n-- ============================================================================\n`;
+  sql += `-- RENTAL CATEGORIES\n`;
+  sql += `-- ============================================================================\n\n`;
+
+  sql += `-- Update rental_categories thumbnail URLs\n`;
+  for (const [oldUrl, newUrl] of Object.entries(urlMapping)) {
+    sql += `UPDATE rental_categories SET thumbnail_url = '${newUrl}' WHERE thumbnail_url = '${oldUrl}';\n`;
   }
 
   fs.writeFileSync(sqlFile, sql);
