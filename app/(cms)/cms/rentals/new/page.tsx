@@ -11,7 +11,7 @@ import type { CreateRentalInput } from "@/lib/schemas/rental.schema";
 export default function NewRentalPage() {
   const router = useRouter();
   const createMutation = useCreateRental();
-  
+
   const handleSubmit = async (data: CreateRentalInput) => {
     try {
       await createMutation.mutateAsync(data);
@@ -23,7 +23,7 @@ export default function NewRentalPage() {
       );
     }
   };
-  
+
   return (
     <div className="space-y-8">
       <PageHeader

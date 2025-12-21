@@ -22,9 +22,9 @@ export default function EditRentalPage({ params }: EditRentalPageProps) {
   const router = useRouter();
   const { data, isLoading, error } = useRental(id);
   const updateMutation = useUpdateRental();
-  
+
   const rental = data?.data;
-  
+
   const handleSubmit = async (formData: CreateRentalInput) => {
     try {
       await updateMutation.mutateAsync({ id, ...formData });
@@ -36,7 +36,7 @@ export default function EditRentalPage({ params }: EditRentalPageProps) {
       );
     }
   };
-  
+
   if (isLoading) {
     return (
       <div className="space-y-6">
@@ -51,7 +51,7 @@ export default function EditRentalPage({ params }: EditRentalPageProps) {
       </div>
     );
   }
-  
+
   if (error || !rental) {
     return (
       <div className="space-y-6">
@@ -76,14 +76,26 @@ export default function EditRentalPage({ params }: EditRentalPageProps) {
       </div>
     );
   }
-  
-  // Transform rental data for form
-  const initialData = {
-    ...rental,
+
+  // Transform rental data for form - convert null to undefined/defaults
+  // Map database fields to form schema fields
+  const initialData: Partial<CreateRentalInput> = {
+    name: rental.name,
+    slug: rental.slug,
+    category_id: rental.category_id,
+    description: rental.details ?? "", // DB: details -> Form: description
+    short_description: rental.short_description ?? undefined,
+    thumbnail_url: rental.thumbnail_url ?? undefined,
+    images: rental.images ?? [], // Convert null to empty array
+    daily_rate: undefined, // Not in DB schema
+    specs: (rental.specs as Record<string, string>) ?? {},
     tags: [], // Will be populated from junction table if needed
     features: [], // Will be populated from specs if needed
+    is_featured: rental.is_popular ?? false, // DB: is_popular -> Form: is_featured
+    is_active: rental.is_active ?? true,
+    display_order: rental.display_order ?? 0,
   };
-  
+
   return (
     <div className="space-y-8">
       <PageHeader
