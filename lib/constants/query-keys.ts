@@ -201,7 +201,16 @@ export const cmsQueryKeys = {
       [...cmsQueryKeys.blogCategories.all, "detail", id] as const,
   },
 
-  // Team
+  // Team Members
+  teamMembers: {
+    all: ["cms", "team-members"] as const,
+    list: (params?: ListParams) =>
+      [...cmsQueryKeys.teamMembers.all, "list", params] as const,
+    detail: (id: string) =>
+      [...cmsQueryKeys.teamMembers.all, "detail", id] as const,
+  },
+
+  // Team (legacy - keeping for backwards compatibility)
   team: {
     all: ["cms", "team"] as const,
     list: (params?: ListParams) =>
