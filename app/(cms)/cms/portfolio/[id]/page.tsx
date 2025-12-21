@@ -4,12 +4,20 @@
 import { use } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Edit, ExternalLink, ArrowLeft, Calendar, MapPin, Users, Quote } from "lucide-react";
+import {
+  Edit,
+  ExternalLink,
+  ArrowLeft,
+  Calendar,
+  MapPin,
+  Users,
+  Quote,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/cms/shared/page-header";
 import { LoadingSkeleton } from "@/components/cms/shared/loading-skeleton";
 import { StatusBadge } from "@/components/cms/shared/status-badge";
-import { usePortfolio } from "@/hooks/cms/use-portfolio";
+import { usePortfolioProject } from "@/hooks/cms/use-portfolio";
 
 interface PortfolioPageProps {
   params: Promise<{ id: string }>;
@@ -18,9 +26,9 @@ interface PortfolioPageProps {
 export default function PortfolioDetailPage({ params }: PortfolioPageProps) {
   const { id } = use(params);
   const { data, isLoading, error } = usePortfolioProject(id);
-  
+
   const project = data?.data;
-  
+
   if (isLoading) {
     return (
       <div className="space-y-6">
@@ -35,7 +43,7 @@ export default function PortfolioDetailPage({ params }: PortfolioPageProps) {
       </div>
     );
   }
-  
+
   if (error || !project) {
     return (
       <div className="space-y-6">
@@ -60,12 +68,16 @@ export default function PortfolioDetailPage({ params }: PortfolioPageProps) {
       </div>
     );
   }
-  
+
   return (
     <div className="space-y-6">
       <PageHeader
         title={project.title}
-        description={project.description ? project.description.substring(0, 150) + '...' : undefined}
+        description={
+          project.description
+            ? project.description.substring(0, 150) + "..."
+            : undefined
+        }
         breadcrumbs={[
           { label: "Portfolio", href: "/cms/portfolio" },
           { label: project.title },
@@ -87,7 +99,7 @@ export default function PortfolioDetailPage({ params }: PortfolioPageProps) {
           </div>
         }
       />
-      
+
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Main Content */}
         <div className="space-y-6 lg:col-span-2">
@@ -102,7 +114,7 @@ export default function PortfolioDetailPage({ params }: PortfolioPageProps) {
               />
             </div>
           )}
-          
+
           {/* Description */}
           <div className="rounded-xl border border-border bg-card p-6">
             <h2 className="mb-4 text-lg font-semibold">Description</h2>
@@ -110,7 +122,7 @@ export default function PortfolioDetailPage({ params }: PortfolioPageProps) {
               {project.description || "No description provided."}
             </p>
           </div>
-          
+
           {/* Event Details */}
           <div className="rounded-xl border border-border bg-card p-6">
             <h2 className="mb-4 text-lg font-semibold">Event Details</h2>
@@ -124,46 +136,59 @@ export default function PortfolioDetailPage({ params }: PortfolioPageProps) {
               {project.event_date && (
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">{new Date(project.event_date).toLocaleDateString()}</span>
+                  <span className="text-sm">
+                    {new Date(project.event_date).toLocaleDateString()}
+                  </span>
                 </div>
               )}
               {project.attendee_count && (
                 <div className="flex items-center gap-2">
                   <Users className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">{project.attendee_count} attendees</span>
+                  <span className="text-sm">
+                    {project.attendee_count} attendees
+                  </span>
                 </div>
               )}
               {(project as any).event_types && (
                 <div className="flex items-center gap-2">
-                  <span className="text-sm">Type: {(project as any).event_types.name}</span>
+                  <span className="text-sm">
+                    Type: {(project as any).event_types.name}
+                  </span>
                 </div>
               )}
             </div>
           </div>
-          
+
           {/* Goals */}
           {project.goals && (
             <div className="rounded-xl border border-border bg-card p-6">
               <h2 className="mb-4 text-lg font-semibold">Goals</h2>
-              <p className="whitespace-pre-wrap text-muted-foreground">{project.goals}</p>
+              <p className="whitespace-pre-wrap text-muted-foreground">
+                {project.goals}
+              </p>
             </div>
           )}
-          
+
           {/* Technical Highlights */}
-          {project.technical_highlights && project.technical_highlights.length > 0 && (
-            <div className="rounded-xl border border-border bg-card p-6">
-              <h2 className="mb-4 text-lg font-semibold">Technical Highlights</h2>
-              <ul className="space-y-2">
-                {project.technical_highlights.map((highlight, index) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <span className="inline-block h-2 w-2 rounded-full bg-accent mt-2 flex-shrink-0"></span>
-                    <span className="text-sm">{highlight}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-          
+          {project.technical_highlights &&
+            project.technical_highlights.length > 0 && (
+              <div className="rounded-xl border border-border bg-card p-6">
+                <h2 className="mb-4 text-lg font-semibold">
+                  Technical Highlights
+                </h2>
+                <ul className="space-y-2">
+                  {project.technical_highlights.map(
+                    (highlight: string, index: number) => (
+                      <li key={index} className="flex items-start gap-2">
+                        <span className="inline-block h-2 w-2 rounded-full bg-accent mt-2 shrink-0"></span>
+                        <span className="text-sm">{highlight}</span>
+                      </li>
+                    )
+                  )}
+                </ul>
+              </div>
+            )}
+
           {/* Client Testimonial */}
           {project.client_quote_text && (
             <div className="rounded-xl border border-border bg-card p-6">
@@ -178,13 +203,15 @@ export default function PortfolioDetailPage({ params }: PortfolioPageProps) {
                 <div className="text-right">
                   <p className="font-medium">{project.client_quote_author}</p>
                   {project.client_quote_role && (
-                    <p className="text-sm text-muted-foreground">{project.client_quote_role}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {project.client_quote_role}
+                    </p>
                   )}
                 </div>
               )}
             </div>
           )}
-          
+
           {/* Gallery */}
           {project.gallery && project.gallery.length > 0 && (
             <div className="rounded-xl border border-border bg-card p-6">
@@ -207,7 +234,7 @@ export default function PortfolioDetailPage({ params }: PortfolioPageProps) {
             </div>
           )}
         </div>
-        
+
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Status Card */}
@@ -216,11 +243,15 @@ export default function PortfolioDetailPage({ params }: PortfolioPageProps) {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Visibility</span>
-                <StatusBadge status={project.is_active ? "active" : "inactive"} />
+                <StatusBadge
+                  status={project.is_active ? "active" : "inactive"}
+                />
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Featured</span>
-                <StatusBadge status={project.is_featured ? "featured" : "draft"} />
+                <StatusBadge
+                  status={project.is_featured ? "featured" : "draft"}
+                />
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Display Order</span>
@@ -228,17 +259,15 @@ export default function PortfolioDetailPage({ params }: PortfolioPageProps) {
               </div>
             </div>
           </div>
-          
+
           {/* Event Type */}
           {(project as any).event_types && (
             <div className="rounded-xl border border-border bg-card p-6">
               <h2 className="mb-4 text-lg font-semibold">Event Type</h2>
-              <p className="font-medium">
-                {(project as any).event_types.name}
-              </p>
+              <p className="font-medium">{(project as any).event_types.name}</p>
             </div>
           )}
-          
+
           {/* Metadata */}
           <div className="rounded-xl border border-border bg-card p-6">
             <h2 className="mb-4 text-lg font-semibold">Metadata</h2>
@@ -249,15 +278,11 @@ export default function PortfolioDetailPage({ params }: PortfolioPageProps) {
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Created</span>
-                <span>
-                  {new Date(project.created_at).toLocaleDateString()}
-                </span>
+                <span>{new Date(project.created_at).toLocaleDateString()}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Updated</span>
-                <span>
-                  {new Date(project.updated_at).toLocaleDateString()}
-                </span>
+                <span>{new Date(project.updated_at).toLocaleDateString()}</span>
               </div>
             </div>
           </div>

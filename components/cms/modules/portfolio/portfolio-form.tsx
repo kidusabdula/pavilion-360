@@ -26,6 +26,16 @@ import {
 } from "@/lib/schemas/portfolio.schema";
 import { generateSlug } from "@/lib/utils/slug";
 import { useEventTypes } from "@/hooks/cms/use-portfolio";
+import type { Tables } from "@/lib/supabase/types";
+import { z } from "zod";
+
+// Schema for the form state (with objects for field arrays)
+const formSchema = createPortfolioSchema.extend({
+  gallery: z.array(z.object({ url: z.string().url() })).default([]),
+  technical_highlights: z.array(z.object({ value: z.string() })).default([]),
+});
+
+type FormValues = z.infer<typeof formSchema>;
 
 interface PortfolioFormProps {
   initialData?: Partial<CreatePortfolioInput> & { id?: string };
@@ -44,8 +54,8 @@ export function PortfolioForm({
   const { data: eventTypesData } = useEventTypes();
   const eventTypes = eventTypesData?.data || [];
 
-  const form = useForm<CreatePortfolioInput>({
-    resolver: zodResolver(createPortfolioSchema),
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       title: initialData?.title || "",
       slug: initialData?.slug || "",
@@ -53,10 +63,11 @@ export function PortfolioForm({
       venue: initialData?.venue || undefined,
       event_date: initialData?.event_date || undefined,
       thumbnail_url: initialData?.thumbnail_url || undefined,
-      gallery: initialData?.gallery || [],
+      gallery: initialData?.gallery?.map((url) => ({ url })) || [],
       description: initialData?.description || "",
       goals: initialData?.goals || undefined,
-      technical_highlights: initialData?.technical_highlights || [],
+      technical_highlights:
+        initialData?.technical_highlights?.map((value) => ({ value })) || [],
       attendee_count: initialData?.attendee_count || undefined,
       client_quote_text: initialData?.client_quote_text || undefined,
       client_quote_author: initialData?.client_quote_author || undefined,
@@ -66,7 +77,7 @@ export function PortfolioForm({
       display_order: initialData?.display_order || 0,
       seo_title: initialData?.seo_title || undefined,
       seo_description: initialData?.seo_description || undefined,
-    },
+    } as any, // Cast to any for defaultValues to avoid deep partial issues
   });
 
   const {
@@ -83,13 +94,19 @@ export function PortfolioForm({
     fields: galleryFields,
     append: appendGallery,
     remove: removeGallery,
-  } = useFieldArray({ control, name: "gallery" });
+  } = useFieldArray({
+    control,
+    name: "gallery",
+  });
 
   const {
     fields: highlightFields,
     append: appendHighlight,
     remove: removeHighlight,
-  } = useFieldArray({ control, name: "technical_highlights" });
+  } = useFieldArray({
+    control,
+    name: "technical_highlights",
+  });
 
   // Auto-generate slug from title
   const titleValue = watch("title");
@@ -99,9 +116,19 @@ export function PortfolioForm({
     }
   }, [titleValue, isEdit, setValue, initialData?.slug]);
 
+  const handleFormSubmit = async (data: FormValues) => {
+    // Transform back to original schema format
+    const transformedData: CreatePortfolioInput = {
+      ...data,
+      gallery: data.gallery.map((img) => img.url),
+      technical_highlights: data.technical_highlights.map((h) => h.value),
+    };
+    await onSubmit(transformedData);
+  };
+
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(handleFormSubmit)}
       className="w-full max-w-6xl space-y-8"
     >
       {/* Basic Information */}
@@ -186,7 +213,7 @@ export function PortfolioForm({
                 <SelectValue placeholder="Select event type" />
               </SelectTrigger>
               <SelectContent>
-                {eventTypes.map((eventType) => (
+                {eventTypes.map((eventType: Tables<"event_types">) => (
                   <SelectItem key={eventType.id} value={eventType.id}>
                     {eventType.name}
                   </SelectItem>
@@ -247,7 +274,7 @@ export function PortfolioForm({
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => appendGallery("")}
+                onClick={() => appendGallery({ url: "" })}
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Add Image
@@ -260,8 +287,10 @@ export function PortfolioForm({
                   className="relative group rounded-xl border border-border p-2"
                 >
                   <ImageUpload
-                    value={watch(`gallery.${index}`)}
-                    onChange={(url) => setValue(`gallery.${index}`, url || "")}
+                    value={watch(`gallery.${index}.url`)}
+                    onChange={(url) =>
+                      setValue(`gallery.${index}.url`, url || "")
+                    }
                     folder="portfolio/gallery"
                   />
                   <Button
@@ -303,7 +332,7 @@ export function PortfolioForm({
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => appendHighlight("")}
+                onClick={() => appendHighlight({ value: "" })}
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Add Highlight
@@ -313,7 +342,9 @@ export function PortfolioForm({
               {highlightFields.map((field, index) => (
                 <div key={field.id} className="flex items-start gap-2">
                   <Input
-                    {...register(`technical_highlights.${index}` as const)}
+                    {...register(
+                      `technical_highlights.${index}.value` as const
+                    )}
                     placeholder="Technical highlight..."
                     className="flex-1"
                   />
