@@ -2,3 +2,4 @@
 // Barrel exports for CMS form components
 
 export { ImageUpload } from "./image-upload";
+export { RichTextEditor } from './rich-text-editor';
