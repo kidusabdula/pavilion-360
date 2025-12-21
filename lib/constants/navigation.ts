@@ -77,7 +77,7 @@ export const cmsNavigation: NavSection[] = [
     items: [
       {
         title: 'Team',
-        href: '/cms/team',
+        href: '/cms/team-members',
         icon: Users,
       },
       {
