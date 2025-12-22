@@ -16,8 +16,9 @@ import {
   Settings,
   Tags,
   CalendarDays,
+  FolderTree,
   type LucideIcon,
-} from 'lucide-react';
+} from "lucide-react";
 
 export interface NavItem {
   title: string;
@@ -33,101 +34,106 @@ export interface NavSection {
 
 export const cmsNavigation: NavSection[] = [
   {
-    title: 'Overview',
+    title: "Overview",
     items: [
       {
-        title: 'Dashboard',
-        href: '/cms',
+        title: "Dashboard",
+        href: "/cms",
         icon: LayoutDashboard,
       },
     ],
   },
   {
-    title: 'Content',
+    title: "Content",
     items: [
       {
-        title: 'Services',
-        href: '/cms/services',
+        title: "Services",
+        href: "/cms/services",
         icon: Briefcase,
       },
       {
-        title: 'Rentals',
-        href: '/cms/rentals',
+        title: "Rentals",
+        href: "/cms/rentals",
         icon: Package,
       },
       {
-        title: 'Portfolio',
-        href: '/cms/portfolio',
+        title: "Portfolio",
+        href: "/cms/portfolio",
         icon: FolderOpen,
       },
       {
-        title: 'Venues',
-        href: '/cms/venues',
+        title: "Venues",
+        href: "/cms/venues",
         icon: Building2,
       },
       {
-        title: 'Blog',
-        href: '/cms/blog',
+        title: "Blog",
+        href: "/cms/blog",
         icon: FileText,
       },
     ],
   },
   {
-    title: 'People & Feedback',
+    title: "People & Feedback",
     items: [
       {
-        title: 'Team',
-        href: '/cms/team-members',
+        title: "Team",
+        href: "/cms/team-members",
         icon: Users,
       },
       {
-        title: 'Testimonials',
-        href: '/cms/testimonials',
+        title: "Testimonials",
+        href: "/cms/testimonials",
         icon: Quote,
       },
       {
-        title: 'FAQs',
-        href: '/cms/faqs',
+        title: "FAQs",
+        href: "/cms/faqs",
         icon: HelpCircle,
       },
     ],
   },
   {
-    title: 'CRM',
+    title: "CRM",
     items: [
       {
-        title: 'Quote Requests',
-        href: '/cms/quotes',
+        title: "Quote Requests",
+        href: "/cms/quotes",
         icon: ShoppingCart,
       },
       {
-        title: 'Inquiries',
-        href: '/cms/inquiries',
+        title: "Inquiries",
+        href: "/cms/inquiries",
         icon: MessageSquare,
       },
     ],
   },
   {
-    title: 'System',
+    title: "System",
     items: [
       {
-        title: 'Media Library',
-        href: '/cms/media',
+        title: "Media Library",
+        href: "/cms/media",
         icon: ImageIcon,
       },
       {
-        title: 'Event Types',
-        href: '/cms/event-types',
+        title: "Event Types",
+        href: "/cms/event-types",
         icon: CalendarDays,
       },
       {
-        title: 'Tags',
-        href: '/cms/tags',
+        title: "Tags",
+        href: "/cms/tags",
         icon: Tags,
       },
       {
-        title: 'Settings',
-        href: '/cms/settings',
+        title: "Categories",
+        href: "/cms/categories",
+        icon: FolderTree,
+      },
+      {
+        title: "Settings",
+        href: "/cms/settings",
         icon: Settings,
       },
     ],
