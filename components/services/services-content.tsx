@@ -1,27 +1,28 @@
 // components/services/services-content.tsx
-import { ServiceCard } from './service-card';
-import { adaptDbServicesToServices } from '@/lib/utils/service-adapter';
-import type { Service } from '@/lib/types/services';
+import { ServiceCard } from "./service-card";
+import { adaptDbServicesToServices } from "@/lib/utils/service-adapter";
+import type { Service } from "@/lib/types/services";
+import { getBaseUrl } from "@/lib/utils/url";
 
 async function getServices(): Promise<Service[]> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-  
+  const baseUrl = getBaseUrl();
+
   const res = await fetch(`${baseUrl}/api/public/services`, {
     next: { revalidate: 3600 },
   });
-  
+
   if (!res.ok) {
-    console.error('Failed to fetch services');
+    console.error("Failed to fetch services");
     return [];
   }
-  
+
   const { data } = await res.json();
   return adaptDbServicesToServices(data || []);
 }
 
 export async function ServicesContent() {
   const services = await getServices();
-  
+
   if (services.length === 0) {
     return (
       <div className="text-center py-20">
@@ -30,14 +31,17 @@ export async function ServicesContent() {
       </div>
     );
   }
-  
+
   return (
     <>
       {/* Results Summary */}
       <div className="flex items-center justify-between mb-8 pb-4 border-b border-border/30">
         <span className="text-sm text-muted-foreground">
-          Showing <span className="font-semibold text-foreground">{services.length}</span>{' '}
-          {services.length === 1 ? 'service' : 'services'}
+          Showing{" "}
+          <span className="font-semibold text-foreground">
+            {services.length}
+          </span>{" "}
+          {services.length === 1 ? "service" : "services"}
         </span>
       </div>
       {/* Services Grid */}
