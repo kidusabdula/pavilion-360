@@ -7,7 +7,8 @@ import { DataTable } from '@/components/cms/shared/data-table';
 import { StatusBadge } from '@/components/cms/shared/status-badge';
 import { ConfirmDialog } from '@/components/cms/shared/confirm-dialog';
 import { useRentalCategories, useCreateRentalCategory, useUpdateRentalCategory, useDeleteRentalCategory } from '@/hooks/cms/use-rental-categories';
-import { RentalCategoryForm } from './rental-category-form';
+import { RentalCategoryForm } from './rental-category-form
+';
 import type { Tables } from '@/lib/supabase/types';
 
 type RentalCategory = Tables<'rental_categories'>;
