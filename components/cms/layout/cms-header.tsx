@@ -1,9 +1,16 @@
-// components/cms/layout/cms-header.tsx
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Menu, Search, Bell, ExternalLink, LogOut, User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { 
+  Menu, 
+  Search, 
+  Bell, 
+  ExternalLink, 
+  LogOut, 
+  User, 
+  Loader2 
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -17,11 +24,26 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { CMSSidebar } from './cms-sidebar';
 import { CMSBreadcrumb } from './cms-breadcrumb';
+import { useAuth } from '@/hooks/use-auth';
 
 export function CMSHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const pathname = usePathname();
-
+  const { user, loading, signOut } = useAuth();
+  
+  // Get user initials for avatar
+  const getUserInitials = () => {
+    if (!user) return 'U';
+    const name = user.user_metadata?.full_name || user.email || '';
+    if (user.user_metadata?.full_name) {
+      return name.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2);
+    }
+    return name.charAt(0).toUpperCase();
+  };
+  
+  const handleSignOut = async () => {
+    await signOut();
+  };
+  
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b border-border bg-card/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-card/60 lg:px-6">
       {/* Mobile Menu Button */}
@@ -80,23 +102,33 @@ export function CMSHeader() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="rounded-full">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent">
-                <span className="text-xs font-semibold text-accent-foreground">A</span>
-              </div>
+              {loading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80">
+                  <span className="text-xs font-semibold text-primary-foreground">
+                    {getUserInitials()}
+                  </span>
+                </div>
+              )}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium">Admin</p>
-                <p className="text-xs text-muted-foreground">admin@pavilion360.com</p>
+                <p className="text-sm font-medium">
+                  {user?.user_metadata?.full_name || 'Admin'}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {user?.email || 'Loading...'}
+                </p>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link href="/cms/settings" className="cursor-pointer">
                 <User className="mr-2 h-4 w-4" />
-                Profile
+                Settings
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
@@ -106,7 +138,10 @@ export function CMSHeader() {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer text-red-500 focus:text-red-500">
+            <DropdownMenuItem 
+              onClick={handleSignOut}
+              className="cursor-pointer text-red-500 focus:text-red-500"
+            >
               <LogOut className="mr-2 h-4 w-4" />
               Log out
             </DropdownMenuItem>
