@@ -1,66 +1,75 @@
 // app/api/public/services/[slug]/route.ts
-// Public API for single service by slug
 import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { ApiError, handleApiError, successResponse } from '@/lib/utils/api-error';
 
-interface RouteParams {
-  params: Promise<{ slug: string }>;
-}
+type Params = { params: Promise<{ slug: string }> };
 
-export async function GET(request: NextRequest, { params }: RouteParams) {
-  try {
-    const { slug } = await params;
-    const supabase = await createClient();
-    
-    // Get service
-    const { data: service, error } = await supabase
-      .from('services')
-      .select('*')
-      .eq('slug', slug)
-      .eq('is_active', true)
-      .is('deleted_at', null)
-      .single();
-    
-    if (error || !service) {
-      throw ApiError.notFound('Service');
-    }
-    
-    // Fetch related data
-    const [useCasesRes, processStepsRes, packagesRes] = await Promise.all([
-      supabase
-        .from('service_use_cases')
-        .select('*')
-        .eq('service_id', service.id)
-        .order('display_order'),
-      supabase
-        .from('service_process_steps')
-        .select('*')
-        .eq('service_id', service.id)
-        .order('step_number'),
-      supabase
-        .from('service_packages')
-        .select('*')
-        .eq('service_id', service.id)
-        .order('display_order'),
-    ]);
-    
-    // Increment view count (fire and forget)
-    supabase
-      .from('services')
-      .update({ view_count: (service.view_count || 0) + 1 })
-      .eq('id', service.id)
-      .then();
-    
+export async function GET(request: NextRequest, { params }: Params) {
+  const { slug } = await params;
+  const supabase = await createClient();
+  
+  const { data: service, error } = await supabase
+    .from('services')
+    .select(`
+      id,
+      name,
+      slug,
+      tagline,
+      description,
+      icon,
+      thumbnail_url,
+      what_we_do,
+      gallery,
+      display_order,
+      service_use_cases (
+        id,
+        title,
+        description,
+        image_url,
+        display_order
+      ),
+      service_process_steps (
+        id,
+        step_number,
+        title,
+        description
+      ),
+      service_packages (
+        id,
+        name,
+        description,
+        starting_price,
+        features,
+        display_order
+      )
+    `)
+    .eq('slug', slug)
+    .eq('is_active', true)
+    .is('deleted_at', null)
+    .single();
+  
+  if (error || !service) {
     return Response.json(
-      successResponse({
-        ...service,
-        use_cases: useCasesRes.data || [],
-        process_steps: processStepsRes.data || [],
-        packages: packagesRes.data || [],
-      })
+      { success: false, error: 'Service not found' },
+      { status: 404 }
     );
-  } catch (error) {
-    return handleApiError(error);
   }
+  
+  // Get related services (other active services, limit 3)
+  const { data: relatedServices } = await supabase
+    .from('services')
+    .select('id, name, slug, tagline, icon')
+    .neq('id', service.id)
+    .eq('is_active', true)
+    .is('deleted_at', null)
+    .order('display_order', { ascending: true })
+    .limit(3);
+  
+  return Response.json({
+    success: true,
+    data: {
+      ...service,
+      relatedServices: relatedServices || [],
+    },
+  });
 }
