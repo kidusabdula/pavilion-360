@@ -1,8 +1,8 @@
 // components/cms/shared/data-table.tsx
-'use client';
-import { useState, useMemo } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+"use client";
+import { useState, useMemo } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import {
   Search,
   MoreHorizontal,
@@ -12,18 +12,18 @@ import {
   Pencil,
   Trash2,
   ExternalLink,
-} from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+} from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { cn } from '@/lib/utils/cn';
-import { motion, AnimatePresence } from 'framer-motion';
+} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils/cn";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Column<T> {
   key: string;
@@ -40,45 +40,49 @@ interface DataTableProps<T extends { id: string }> {
   searchKey?: keyof T;
   baseUrl: string;
   onDelete?: (item: T) => void;
+  onEdit?: (item: T) => void; // Optional callback for inline editing
   emptyMessage?: string;
   showViewButton?: boolean;
   viewUrl?: (item: T) => string;
+  customActions?: (item: T) => React.ReactNode; // Custom action buttons
 }
 
 export function DataTable<T extends { id: string }>({
   data,
   columns,
-  searchPlaceholder = 'Search...',
+  searchPlaceholder = "Search...",
   searchKey,
   baseUrl,
   onDelete,
-  emptyMessage = 'No items found',
+  onEdit,
+  emptyMessage = "No items found",
   showViewButton = false,
   viewUrl,
+  customActions,
 }: DataTableProps<T>) {
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-  
+
   // Filter data based on search
   const filteredData = useMemo(() => {
     if (!search || !searchKey) return data;
     return data.filter((item) => {
       const value = item[searchKey];
-      if (typeof value === 'string') {
+      if (typeof value === "string") {
         return value.toLowerCase().includes(search.toLowerCase());
       }
       return false;
     });
   }, [data, search, searchKey]);
-  
+
   // Pagination
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const paginatedData = filteredData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-  
+
   return (
     <div className="rounded-xl border border-border bg-card overflow-hidden">
       {/* Toolbar */}
@@ -97,10 +101,10 @@ export function DataTable<T extends { id: string }>({
           />
         </div>
         <div className="text-sm text-muted-foreground">
-          {filteredData.length} {filteredData.length === 1 ? 'item' : 'items'}
+          {filteredData.length} {filteredData.length === 1 ? "item" : "items"}
         </div>
       </div>
-      
+
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full">
@@ -110,7 +114,7 @@ export function DataTable<T extends { id: string }>({
                 <th
                   key={column.key}
                   className={cn(
-                    'px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground',
+                    "px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground",
                     column.className
                   )}
                 >
@@ -137,56 +141,70 @@ export function DataTable<T extends { id: string }>({
                     {columns.map((column) => (
                       <td
                         key={column.key}
-                        className={cn('px-4 py-4 text-sm', column.className)}
+                        className={cn("px-4 py-4 text-sm", column.className)}
                       >
                         {column.render
                           ? column.render(item)
-                          : String((item as Record<string, unknown>)[column.key] ?? '')}
+                          : String(
+                              (item as Record<string, unknown>)[column.key] ??
+                                ""
+                            )}
                       </td>
                     ))}
                     <td className="px-4 py-4 text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <MoreHorizontal className="h-4 w-4" />
-                            <span className="sr-only">Actions</span>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem asChild>
-                            <Link href={`${baseUrl}/${item.id}`}>
-                              <Eye className="mr-2 h-4 w-4" />
-                              View Details
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem asChild>
-                            <Link href={`${baseUrl}/${item.id}/edit`}>
-                              <Pencil className="mr-2 h-4 w-4" />
-                              Edit
-                            </Link>
-                          </DropdownMenuItem>
-                          {showViewButton && viewUrl && (
+                      {customActions ? (
+                        customActions(item)
+                      ) : (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                              <MoreHorizontal className="h-4 w-4" />
+                              <span className="sr-only">Actions</span>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
                             <DropdownMenuItem asChild>
-                              <Link href={viewUrl(item)} target="_blank">
-                                <ExternalLink className="mr-2 h-4 w-4" />
-                                View Live
+                              <Link href={`${baseUrl}/${item.id}`}>
+                                <Eye className="mr-2 h-4 w-4" />
+                                View Details
                               </Link>
                             </DropdownMenuItem>
-                          )}
-                          {onDelete && (
-                            <>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem
-                                onClick={() => onDelete(item)}
-                                className="text-red-500 focus:text-red-500"
-                              >
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Delete
+                            {onEdit ? (
+                              <DropdownMenuItem onClick={() => onEdit(item)}>
+                                <Pencil className="mr-2 h-4 w-4" />
+                                Edit
                               </DropdownMenuItem>
-                            </>
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                            ) : (
+                              <DropdownMenuItem asChild>
+                                <Link href={`${baseUrl}/${item.id}/edit`}>
+                                  <Pencil className="mr-2 h-4 w-4" />
+                                  Edit
+                                </Link>
+                              </DropdownMenuItem>
+                            )}
+                            {showViewButton && viewUrl && (
+                              <DropdownMenuItem asChild>
+                                <Link href={viewUrl(item)} target="_blank">
+                                  <ExternalLink className="mr-2 h-4 w-4" />
+                                  View Live
+                                </Link>
+                              </DropdownMenuItem>
+                            )}
+                            {onDelete && (
+                              <>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                  onClick={() => onDelete(item)}
+                                  className="text-red-500 focus:text-red-500"
+                                >
+                                  <Trash2 className="mr-2 h-4 w-4" />
+                                  Delete
+                                </DropdownMenuItem>
+                              </>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
                     </td>
                   </motion.tr>
                 ))
@@ -204,7 +222,7 @@ export function DataTable<T extends { id: string }>({
           </tbody>
         </table>
       </div>
-      
+
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between border-t border-border px-4 py-3">
@@ -252,16 +270,10 @@ export function TableThumbnail({
       </div>
     );
   }
-  
+
   return (
     <div className="relative h-10 w-10 overflow-hidden rounded-lg">
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        className="object-cover"
-        sizes="40px"
-      />
+      <Image src={src} alt={alt} fill className="object-cover" sizes="40px" />
     </div>
   );
 }

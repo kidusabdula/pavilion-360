@@ -71,7 +71,18 @@ export function RentalCategoriesTab() {
               </DialogTitle>
             </DialogHeader>
             <RentalCategoryForm
-              initialData={editingCategory || undefined}
+              initialData={
+                editingCategory
+                  ? {
+                      name: editingCategory.name,
+                      slug: editingCategory.slug,
+                      description: editingCategory.description ?? undefined,
+                      thumbnail_url: editingCategory.thumbnail_url ?? undefined,
+                      display_order: editingCategory.display_order ?? 0,
+                      is_active: editingCategory.is_active ?? true,
+                    }
+                  : undefined
+              }
               onSubmit={handleSubmit}
               isSubmitting={
                 createMutation.isPending || updateMutation.isPending
