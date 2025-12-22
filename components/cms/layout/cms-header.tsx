@@ -1,18 +1,18 @@
-'use client';
-import { useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { 
-  Menu, 
-  Search, 
-  Bell, 
-  ExternalLink, 
-  LogOut, 
-  User, 
-  Loader2 
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+"use client";
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import {
+  Menu,
+  Search,
+  Bell,
+  ExternalLink,
+  LogOut,
+  User,
+  Loader2,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,30 +20,35 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { CMSSidebar } from './cms-sidebar';
-import { CMSBreadcrumb } from './cms-breadcrumb';
-import { useAuth } from '@/hooks/use-auth';
+} from "@/components/ui/dropdown-menu";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { CMSSidebar } from "./cms-sidebar";
+import { CMSBreadcrumb } from "./cms-breadcrumb";
+import { useAuth } from "@/hooks/use-auth";
 
 export function CMSHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, loading, signOut } = useAuth();
-  
+
   // Get user initials for avatar
   const getUserInitials = () => {
-    if (!user) return 'U';
-    const name = user.user_metadata?.full_name || user.email || '';
+    if (!user) return "U";
+    const name = user.user_metadata?.full_name || user.email || "";
     if (user.user_metadata?.full_name) {
-      return name.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2);
+      return name
+        .split(" ")
+        .map((n: string) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
     }
     return name.charAt(0).toUpperCase();
   };
-  
+
   const handleSignOut = async () => {
     await signOut();
   };
-  
+
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b border-border bg-card/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-card/60 lg:px-6">
       {/* Mobile Menu Button */}
@@ -58,17 +63,17 @@ export function CMSHeader() {
           <CMSSidebar onNavigate={() => setMobileMenuOpen(false)} />
         </SheetContent>
       </Sheet>
-      
+
       {/* Breadcrumb */}
       <div className="hidden flex-1 lg:block">
         <CMSBreadcrumb />
       </div>
-      
+
       {/* Mobile Title */}
       <div className="flex-1 lg:hidden">
         <span className="text-sm font-semibold">Pavilion360 CMS</span>
       </div>
-      
+
       {/* Search */}
       <div className="hidden w-full max-w-sm lg:block">
         <div className="relative">
@@ -80,7 +85,7 @@ export function CMSHeader() {
           />
         </div>
       </div>
-      
+
       {/* Actions */}
       <div className="flex items-center gap-2">
         {/* View Site */}
@@ -90,22 +95,26 @@ export function CMSHeader() {
             <span className="sr-only">View site</span>
           </Link>
         </Button>
-        
+
         {/* Notifications */}
         <Button variant="ghost" size="icon" className="relative">
           <Bell className="h-4 w-4" />
           <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-red-500" />
           <span className="sr-only">Notifications</span>
         </Button>
-        
+
         {/* User Menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full">
+            <Button
+              variant="default"
+              size="icon"
+              className="rounded-full border-0 hover:bg-accent/50"
+            >
               {loading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80 shadow-sm">
                   <span className="text-xs font-semibold text-primary-foreground">
                     {getUserInitials()}
                   </span>
@@ -117,10 +126,10 @@ export function CMSHeader() {
             <DropdownMenuLabel>
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium">
-                  {user?.user_metadata?.full_name || 'Admin'}
+                  {user?.user_metadata?.full_name || "Admin"}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {user?.email || 'Loading...'}
+                  {user?.email || "Loading..."}
                 </p>
               </div>
             </DropdownMenuLabel>
@@ -138,7 +147,7 @@ export function CMSHeader() {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={handleSignOut}
               className="cursor-pointer text-red-500 focus:text-red-500"
             >
