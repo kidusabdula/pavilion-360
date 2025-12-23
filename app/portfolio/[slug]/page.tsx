@@ -1,12 +1,14 @@
-import type { Metadata } from "next";
-import Script from "next/script";
-import Image from "next/image";
-import Link from "next/link";
-import { HeroSection } from "@/components/shared/hero-section";
-import { portfolioProjects } from "@/lib/data/portfolio";
-import { services } from "@/lib/data/services";
-import { notFound } from "next/navigation";
-import { generateEventSchema, generateBreadcrumbSchema } from "@/lib/utils/seo";
+// app/portfolio/[slug]/page.tsx
+import type { Metadata } from 'next';
+import Script from 'next/script';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Suspense } from 'react';
+import { HeroSection } from '@/components/shared/hero-section';
+import { PortfolioDetailSkeleton } from '@/components/skeletons';
+import { notFound } from 'next/navigation';
+import { generateEventSchema, generateBreadcrumbSchema } from '@/lib/utils/seo';
+import { adaptDbProjectToProject, getServicesFromProject } from '@/lib/utils/portfolio-adapter';
 import {
   ArrowRight,
   Calendar,
@@ -14,29 +16,40 @@ import {
   Users,
   Check,
   Quote,
-} from "@/components/icons";
+} from '@/components/icons';
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
 
+async function getProject(slug: string) {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  
+  const res = await fetch(`${baseUrl}/api/public/portfolio/${slug}`, {
+    next: { revalidate: 3600 },
+  });
+  
+  if (!res.ok) return null;
+  
+  const { data } = await res.json();
+  return data;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const project = portfolioProjects.find((p) => p.slug === slug);
-
-  if (!project) {
-    return {
-      title: "Project Not Found",
-    };
+  const dbProject = await getProject(slug);
+  if (!dbProject) {
+    return { title: 'Project Not Found' };
   }
-
+  
+  const project = adaptDbProjectToProject(dbProject);
   return {
     title: `${project.title} - Portfolio | Pavilion360`,
     description: project.description,
     openGraph: {
       title: project.title,
       description: project.description,
-      type: "article",
+      type: 'article',
       images: [project.thumbnail],
     },
   };
@@ -44,22 +57,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProjectPage({ params }: Props) {
   const { slug } = await params;
-  const project = portfolioProjects.find((p) => p.slug === slug);
-
-  if (!project) notFound();
-
+  const dbProject = await getProject(slug);
+  if (!dbProject) notFound();
+  
+  const project = adaptDbProjectToProject(dbProject);
+  const services = getServicesFromProject(dbProject);
+  const relatedProjects = dbProject.relatedProjects || [];
+  
   // Generate structured data
   const eventSchema = generateEventSchema(project);
   const breadcrumbSchema = generateBreadcrumbSchema([
-    { name: "Home", url: "/" },
-    { name: "Portfolio", url: "/portfolio" },
+    { name: 'Home', url: '/' },
+    { name: 'Portfolio', url: '/portfolio' },
     { name: project.title, url: `/portfolio/${project.slug}` },
   ]);
-
-  // Get other projects for "More Projects" section
-  const otherProjects = portfolioProjects
-    .filter((p) => p.slug !== project.slug)
-    .slice(0, 3);
 
   return (
     <div className="flex flex-col">
@@ -67,16 +78,12 @@ export default async function ProjectPage({ params }: Props) {
       <Script
         id="event-schema"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(eventSchema),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(eventSchema) }}
       />
       <Script
         id="breadcrumb-schema"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(breadcrumbSchema),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
       <HeroSection
@@ -97,10 +104,7 @@ export default async function ProjectPage({ params }: Props) {
             </li>
             <li>/</li>
             <li>
-              <Link
-                href="/portfolio"
-                className="hover:text-accent transition-colors"
-              >
+              <Link href="/portfolio" className="hover:text-accent transition-colors">
                 Portfolio
               </Link>
             </li>
@@ -164,52 +168,53 @@ export default async function ProjectPage({ params }: Props) {
             )}
 
             {/* Services Provided */}
-            <div className="mb-16">
-              <h2 className="text-2xl font-bold mb-6">Services Provided</h2>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {project.servicesProvided.map((serviceId) => {
-                  const service = services.find((s) => s.id === serviceId);
-                  return (
+            {services.length > 0 && (
+              <div className="mb-16">
+                <h2 className="text-2xl font-bold mb-6">Services Provided</h2>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {services.map((service) => (
                     <Link
-                      key={serviceId}
-                      href={service ? `/services/${service.slug}` : "#"}
+                      key={service.id}
+                      href={`/services/${service.slug}`}
                       className="flex items-center gap-3 p-4 rounded-xl border border-border/50 bg-card transition-all duration-300 hover:border-accent/30 hover:shadow-lg hover:shadow-accent/5 group"
                     >
                       <div className="shrink-0 h-10 w-10 rounded-lg bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
                         <Check className="h-5 w-5 text-accent" />
                       </div>
                       <span className="font-medium group-hover:text-accent transition-colors">
-                        {service?.name || serviceId}
+                        {service.name}
                       </span>
                     </Link>
-                  );
-                })}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Technical Highlights */}
-            <div className="mb-16">
-              <h2 className="text-2xl font-bold mb-6">Technical Highlights</h2>
-              <div className="grid gap-4 sm:grid-cols-2">
-                {project.technicalHighlights.map((highlight, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-start gap-3 p-4 rounded-xl border border-border/50 bg-card"
-                  >
-                    <div className="shrink-0 mt-0.5">
-                      <div className="h-6 w-6 rounded-full bg-accent/10 flex items-center justify-center">
-                        <span className="text-xs font-bold text-accent">
-                          {idx + 1}
-                        </span>
+            {project.technicalHighlights.length > 0 && (
+              <div className="mb-16">
+                <h2 className="text-2xl font-bold mb-6">Technical Highlights</h2>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {project.technicalHighlights.map((highlight, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-start gap-3 p-4 rounded-xl border border-border/50 bg-card"
+                    >
+                      <div className="shrink-0 mt-0.5">
+                        <div className="h-6 w-6 rounded-full bg-accent/10 flex items-center justify-center">
+                          <span className="text-xs font-bold text-accent">
+                            {idx + 1}
+                          </span>
+                        </div>
                       </div>
+                      <span className="leading-relaxed text-muted-foreground">
+                        {highlight}
+                      </span>
                     </div>
-                    <span className="leading-relaxed text-muted-foreground">
-                      {highlight}
-                    </span>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Client Quote */}
             {project.clientQuote && (
@@ -228,9 +233,7 @@ export default async function ProjectPage({ params }: Props) {
                       </span>
                     </div>
                     <div>
-                      <p className="font-semibold">
-                        {project.clientQuote.author}
-                      </p>
+                      <p className="font-semibold">{project.clientQuote.author}</p>
                       <p className="text-sm text-muted-foreground">
                         {project.clientQuote.role}
                       </p>
@@ -269,7 +272,7 @@ export default async function ProjectPage({ params }: Props) {
       </section>
 
       {/* More Projects */}
-      {otherProjects.length > 0 && (
+      {relatedProjects.length > 0 && (
         <section className="border-t border-border bg-muted/20 py-16 lg:py-24">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
@@ -279,7 +282,7 @@ export default async function ProjectPage({ params }: Props) {
               </p>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
-              {otherProjects.map((otherProject) => (
+              {relatedProjects.map((otherProject: any) => (
                 <Link
                   key={otherProject.slug}
                   href={`/portfolio/${otherProject.slug}`}
@@ -287,7 +290,7 @@ export default async function ProjectPage({ params }: Props) {
                 >
                   <div className="relative aspect-video overflow-hidden">
                     <Image
-                      src={otherProject.thumbnail}
+                      src={otherProject.thumbnail_url || '/placeholder.svg'}
                       alt={otherProject.title}
                       fill
                       className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -296,7 +299,7 @@ export default async function ProjectPage({ params }: Props) {
                     <div className="absolute inset-0 bg-linear-to-t from-background/80 to-transparent" />
                     <div className="absolute bottom-4 left-4 right-4">
                       <span className="text-xs font-medium text-accent bg-accent/20 px-2 py-1 rounded-full">
-                        {otherProject.eventType}
+                        {otherProject.event_types?.name || 'Event'}
                       </span>
                       <h3 className="mt-2 font-semibold text-white line-clamp-1">
                         {otherProject.title}
@@ -325,7 +328,6 @@ export default async function ProjectPage({ params }: Props) {
           <div className="absolute top-0 left-0 w-96 h-96 bg-background rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-background rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
         </div>
-
         <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="mb-4 text-3xl font-bold lg:text-4xl">
             Ready to Create Your Event?
@@ -353,10 +355,4 @@ export default async function ProjectPage({ params }: Props) {
       </section>
     </div>
   );
-}
-
-export async function generateStaticParams() {
-  return portfolioProjects.map((project) => ({
-    slug: project.slug,
-  }));
 }
