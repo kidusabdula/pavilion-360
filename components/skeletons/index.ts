@@ -5,4 +5,5 @@ export { ServiceDetailSkeleton } from './service-detail-skeleton';
 export { RentalsGridSkeleton } from './rentals-grid-skeleton';
 export { RentalDetailSkeleton } from './rental-detail-skeleton';
 export { VenuesGridSkeleton } from './venues-grid-skeleton';
-// export { PortfolioGridSkeleton } from './portfolio-grid-skeleton';
+export { PortfolioGridSkeleton } from './portfolio-grid-skeleton';
+export { PortfolioDetailSkeleton } from './portfolio-detail-skeleton';
