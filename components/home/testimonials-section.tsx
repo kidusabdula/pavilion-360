@@ -1,27 +1,33 @@
 // components/home/testimonials-section.tsx
 import { TestimonialCard } from "@/components/shared/testimonial-card";
 import type { Tables } from "@/lib/supabase/types";
-import { getBaseUrl } from "@/lib/utils/url";
+import { createClient } from "@/lib/supabase/server";
 
 type Testimonial = Tables<"testimonials">;
 
 async function getTestimonials(): Promise<Testimonial[]> {
-  const baseUrl = getBaseUrl();
+  try {
+    const supabase = await createClient();
 
-  const res = await fetch(
-    `${baseUrl}/api/public/testimonials?featured=true&limit=3`,
-    {
-      next: { revalidate: 3600 },
+    const { data, error } = await supabase
+      .from("testimonials")
+      .select("*")
+      .eq("is_featured", true)
+      .eq("is_active", true)
+      .is("deleted_at", null)
+      .order("display_order", { ascending: true })
+      .limit(3);
+
+    if (error) {
+      console.error("Failed to fetch testimonials:", error);
+      return [];
     }
-  );
 
-  if (!res.ok) {
-    console.error("Failed to fetch testimonials");
+    return data || [];
+  } catch (error) {
+    console.error("Error fetching testimonials:", error);
     return [];
   }
-
-  const { data } = await res.json();
-  return data || [];
 }
 
 export async function TestimonialsSection() {

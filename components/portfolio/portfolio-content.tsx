@@ -1,33 +1,59 @@
 // components/portfolio/portfolio-content.tsx
-import { PortfolioClientView } from './portfolio-client-view';
-import { adaptDbProjectsToProjects } from '@/lib/utils/portfolio-adapter';
+import { PortfolioClientView } from "./portfolio-client-view";
+import { adaptDbProjectsToProjects } from "@/lib/utils/portfolio-adapter";
+import { createClient } from "@/lib/supabase/server";
 
 async function getProjects() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-  
-  const res = await fetch(`${baseUrl}/api/public/portfolio`, {
-    next: { revalidate: 3600 },
-  });
-  
-  if (!res.ok) {
-    console.error('Failed to fetch portfolio projects');
+  try {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("portfolio_projects")
+      .select(
+        `
+        *,
+        event_types(id, name, slug),
+        portfolio_project_services(
+          services(id, name, slug)
+        )
+      `
+      )
+      .eq("is_active", true)
+      .is("deleted_at", null)
+      .order("display_order", { ascending: true });
+
+    if (error) {
+      console.error("Failed to fetch portfolio projects:", error);
+      return [];
+    }
+
+    return adaptDbProjectsToProjects(data || []);
+  } catch (error) {
+    console.error("Error fetching portfolio projects:", error);
     return [];
   }
-  
-  const { data } = await res.json();
-  return adaptDbProjectsToProjects(data || []);
 }
 
 async function getEventTypes() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-  
-  const res = await fetch(`${baseUrl}/api/public/event-types`, {
-    next: { revalidate: 3600 },
-  });
-  
-  if (!res.ok) return [];
-  const { data } = await res.json();
-  return data || [];
+  try {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("event_types")
+      .select("*")
+      .eq("is_active", true)
+      .order("display_order", { ascending: true });
+
+    if (error) {
+      console.error("Failed to fetch event types:", error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error("Error fetching event types:", error);
+    return [];
+  }
 }
 
 export async function PortfolioContent() {
@@ -35,13 +61,13 @@ export async function PortfolioContent() {
     getProjects(),
     getEventTypes(),
   ]);
-  
+
   // Filter to event types that actually have projects
-  const usedEventTypes = new Set(projects.map(p => p.eventType));
+  const usedEventTypes = new Set(projects.map((p) => p.eventType));
   const relevantEventTypes = eventTypes.filter((et: any) =>
     usedEventTypes.has(et.name)
   );
-  
+
   return (
     <PortfolioClientView
       initialProjects={projects}

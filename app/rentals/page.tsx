@@ -1,12 +1,16 @@
 // app/rentals/page.tsx
-import { Suspense } from 'react';
-import { HeroSection } from '@/components/shared/hero-section';
-import { RentalsGridSkeleton } from '@/components/skeletons';
-import { RentalsContent } from '@/components/rentals/rentals-content';
+import { Suspense } from "react";
+import { HeroSection } from "@/components/shared/hero-section";
+import { RentalsGridSkeleton } from "@/components/skeletons";
+import { RentalsContent } from "@/components/rentals/rentals-content";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 3600; // Revalidate every hour
 
 export const metadata = {
-  title: 'Equipment Rentals - AV, Lighting, Staging & Furniture | Pavilion360',
-  description: 'Professional-grade AV, lighting, staging, and furniture rentals for any event. Browse our extensive inventory.',
+  title: "Equipment Rentals - AV, Lighting, Staging & Furniture | Pavilion360",
+  description:
+    "Professional-grade AV, lighting, staging, and furniture rentals for any event. Browse our extensive inventory.",
 };
 
 export default function RentalsPage() {

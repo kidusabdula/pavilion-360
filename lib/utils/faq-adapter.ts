@@ -1,5 +1,10 @@
 // lib/utils/faq-adapter.ts
-export type FAQCategory = 'General' | 'Rentals' | 'Services' | 'Pricing' | 'Logistics';
+export type FAQCategory =
+  | "General"
+  | "Rentals"
+  | "Services"
+  | "Pricing"
+  | "Logistics";
 
 export interface FAQ {
   id: string;
@@ -12,7 +17,7 @@ interface DbFaq {
   id: string;
   question: string;
   answer: string;
-  display_order: number;
+  display_order: number | null;
   faq_categories: {
     id: string;
     name: string;
@@ -25,7 +30,7 @@ export function adaptDbFaqToFaq(dbFaq: DbFaq): FAQ {
     id: dbFaq.id,
     question: dbFaq.question,
     answer: dbFaq.answer,
-    category: (dbFaq.faq_categories?.name || 'General') as FAQCategory,
+    category: (dbFaq.faq_categories?.name || "General") as FAQCategory,
   };
 }
 

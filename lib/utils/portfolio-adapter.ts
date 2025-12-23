@@ -17,8 +17,8 @@ interface DbPortfolioProject {
   client_quote_text: string | null;
   client_quote_author: string | null;
   client_quote_role: string | null;
-  is_featured: boolean;
-  display_order: number;
+  is_featured: boolean | null;
+  display_order: number | null;
   event_types: {
     id: string;
     name: string;

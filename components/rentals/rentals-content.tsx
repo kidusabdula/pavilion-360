@@ -1,57 +1,106 @@
 // components/rentals/rentals-content.tsx
-import { RentalsClientView } from './rentals-client-view';
-import { adaptDbRentalsToRentals } from '@/lib/utils/rental-adapter';
+import { RentalsClientView } from "./rentals-client-view";
+import { adaptDbRentalsToRentals } from "@/lib/utils/rental-adapter";
+import { createClient } from "@/lib/supabase/server";
 
 async function getRentals() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-  
-  const res = await fetch(`${baseUrl}/api/public/rentals`, {
-    next: { revalidate: 3600 },
-  });
-  
-  if (!res.ok) {
-    console.error('Failed to fetch rentals');
+  try {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("rental_items")
+      .select(
+        `
+        *,
+        rental_categories(id, name, slug),
+        rental_item_event_types(
+          event_types(id, name, slug)
+        ),
+        rental_item_tags(
+          tags(id, name, slug)
+        )
+      `
+      )
+      .eq("is_active", true)
+      .is("deleted_at", null)
+      .order("display_order", { ascending: true });
+
+    if (error) {
+      console.error("Failed to fetch rentals:", error);
+      return [];
+    }
+
+    return adaptDbRentalsToRentals(data || []);
+  } catch (error) {
+    console.error("Error fetching rentals:", error);
     return [];
   }
-  
-  const { data } = await res.json();
-  return adaptDbRentalsToRentals(data || []);
 }
 
 async function getCategories() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-  
-  const res = await fetch(`${baseUrl}/api/public/rental-categories`, {
-    next: { revalidate: 3600 },
-  });
-  
-  if (!res.ok) return [];
-  const { data } = await res.json();
-  return data || [];
+  try {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("rental_categories")
+      .select("*")
+      .eq("is_active", true)
+      .order("display_order", { ascending: true });
+
+    if (error) {
+      console.error("Failed to fetch rental categories:", error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error("Error fetching rental categories:", error);
+    return [];
+  }
 }
 
 async function getEventTypes() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-  
-  const res = await fetch(`${baseUrl}/api/public/event-types`, {
-    next: { revalidate: 3600 },
-  });
-  
-  if (!res.ok) return [];
-  const { data } = await res.json();
-  return data || [];
+  try {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("event_types")
+      .select("*")
+      .eq("is_active", true)
+      .order("display_order", { ascending: true });
+
+    if (error) {
+      console.error("Failed to fetch event types:", error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error("Error fetching event types:", error);
+    return [];
+  }
 }
 
 async function getTags() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-  
-  const res = await fetch(`${baseUrl}/api/public/tags`, {
-    next: { revalidate: 3600 },
-  });
-  
-  if (!res.ok) return [];
-  const { data } = await res.json();
-  return data || [];
+  try {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("tags")
+      .select("*")
+      .eq("is_active", true)
+      .order("name", { ascending: true });
+
+    if (error) {
+      console.error("Failed to fetch tags:", error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error("Error fetching tags:", error);
+    return [];
+  }
 }
 
 export async function RentalsContent() {
@@ -61,12 +110,13 @@ export async function RentalsContent() {
     getEventTypes(),
     getTags(),
   ]);
-  
+
   // Extract unique tags from rentals as fallback
-  const allTags = tags.length > 0 
-    ? tags.map((t: any) => t.name).sort()
-    : Array.from(new Set(rentals.flatMap(r => r.tags))).sort();
-  
+  const allTags =
+    tags.length > 0
+      ? tags.map((t: any) => t.name).sort()
+      : Array.from(new Set(rentals.flatMap((r) => r.tags))).sort();
+
   return (
     <RentalsClientView
       initialRentals={rentals}

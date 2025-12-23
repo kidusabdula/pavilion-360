@@ -1,13 +1,17 @@
 // app/portfolio/page.tsx
-import { Suspense } from 'react';
-import { HeroSection } from '@/components/shared/hero-section';
-import { PortfolioGridSkeleton } from '@/components/skeletons';
-import { PortfolioContent } from '@/components/portfolio/portfolio-content';
-import { Button } from '@/components/ui/button';
+import { Suspense } from "react";
+import { HeroSection } from "@/components/shared/hero-section";
+import { PortfolioGridSkeleton } from "@/components/skeletons";
+import { PortfolioContent } from "@/components/portfolio/portfolio-content";
+import { Button } from "@/components/ui/button";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 3600; // Revalidate every hour
 
 export const metadata = {
-  title: 'Portfolio - Event Production Case Studies | Pavilion360',
-  description: 'Real events, real results. Explore our portfolio of successful productions across Indianapolis and beyond.',
+  title: "Portfolio - Event Production Case Studies | Pavilion360",
+  description:
+    "Real events, real results. Explore our portfolio of successful productions across Indianapolis and beyond.",
 };
 
 export default function PortfolioPage() {

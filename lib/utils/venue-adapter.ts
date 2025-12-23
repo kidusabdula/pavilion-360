@@ -11,9 +11,9 @@ interface DbVenue {
   description: string | null;
   capacity_min: number | null;
   capacity_max: number | null;
-  is_managed: boolean;
+  is_managed: boolean | null;
   external_link: string | null;
-  display_order: number;
+  display_order: number | null;
   venue_event_types?: Array<{
     event_types: {
       id: string;
@@ -52,7 +52,7 @@ export function adaptDbVenueToVenue(dbVenue: DbVenue): Venue {
     },
     eventTypes,
     externalLink: dbVenue.external_link || undefined,
-    managed: dbVenue.is_managed,
+    managed: dbVenue.is_managed ?? false,
   };
 }
 

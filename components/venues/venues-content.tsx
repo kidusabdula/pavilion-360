@@ -1,33 +1,57 @@
 // components/venues/venues-content.tsx
-import { VenuesClientView } from './venues-client-view';
-import { adaptDbVenuesToVenues } from '@/lib/utils/venue-adapter';
+import { VenuesClientView } from "./venues-client-view";
+import { adaptDbVenuesToVenues } from "@/lib/utils/venue-adapter";
+import { createClient } from "@/lib/supabase/server";
 
 async function getVenues() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-  
-  const res = await fetch(`${baseUrl}/api/public/venues`, {
-    next: { revalidate: 3600 },
-  });
-  
-  if (!res.ok) {
-    console.error('Failed to fetch venues');
+  try {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("venues")
+      .select(
+        `
+        *,
+        venue_event_types(
+          event_types(id, name, slug)
+        )
+      `
+      )
+      .eq("is_active", true)
+      .order("display_order", { ascending: true });
+
+    if (error) {
+      console.error("Failed to fetch venues:", error);
+      return [];
+    }
+
+    return adaptDbVenuesToVenues(data || []);
+  } catch (error) {
+    console.error("Error fetching venues:", error);
     return [];
   }
-  
-  const { data } = await res.json();
-  return adaptDbVenuesToVenues(data || []);
 }
 
 async function getEventTypes() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-  
-  const res = await fetch(`${baseUrl}/api/public/event-types`, {
-    next: { revalidate: 3600 },
-  });
-  
-  if (!res.ok) return [];
-  const { data } = await res.json();
-  return data || [];
+  try {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("event_types")
+      .select("*")
+      .eq("is_active", true)
+      .order("display_order", { ascending: true });
+
+    if (error) {
+      console.error("Failed to fetch event types:", error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error("Error fetching event types:", error);
+    return [];
+  }
 }
 
 export async function VenuesContent() {
@@ -35,16 +59,20 @@ export async function VenuesContent() {
     getVenues(),
     getEventTypes(),
   ]);
-  
+
   // Filter to only venue-relevant event types
   const venueEventTypes = eventTypes.filter((et: any) =>
-    ['Corporate', 'Wedding', 'Gala', 'Festival', 'Social', 'Nonprofit'].includes(et.name)
+    [
+      "Corporate",
+      "Wedding",
+      "Gala",
+      "Festival",
+      "Social",
+      "Nonprofit",
+    ].includes(et.name)
   );
-  
+
   return (
-    <VenuesClientView
-      initialVenues={venues}
-      eventTypes={venueEventTypes}
-    />
+    <VenuesClientView initialVenues={venues} eventTypes={venueEventTypes} />
   );
 }

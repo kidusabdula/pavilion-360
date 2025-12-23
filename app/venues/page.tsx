@@ -1,12 +1,17 @@
 // app/venues/page.tsx
-import { Suspense } from 'react';
-import { HeroSection } from '@/components/shared/hero-section';
-import { VenuesGridSkeleton } from '@/components/skeletons';
-import { VenuesContent } from '@/components/venues/venues-content';
+import { Suspense } from "react";
+import { HeroSection } from "@/components/shared/hero-section";
+import { VenuesGridSkeleton } from "@/components/skeletons";
+import { VenuesContent } from "@/components/venues/venues-content";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 3600; // Revalidate every hour
 
 export const metadata = {
-  title: 'Event Venues Indianapolis | Corporate, Wedding & Gala Venues | Pavilion360',
-  description: 'Discover unique Indianapolis event venues managed and serviced by Pavilion360. From intimate gatherings to grand galas, find the perfect space for your event.',
+  title:
+    "Event Venues Indianapolis | Corporate, Wedding & Gala Venues | Pavilion360",
+  description:
+    "Discover unique Indianapolis event venues managed and serviced by Pavilion360. From intimate gatherings to grand galas, find the perfect space for your event.",
 };
 
 export default function VenuesPage() {

@@ -1,45 +1,60 @@
 // components/faqs/faqs-content.tsx
-import { FaqsClientView } from './faqs-client-view';
-import { adaptDbFaqsToFaqs } from '@/lib/utils/faq-adapter';
+import { FaqsClientView } from "./faqs-client-view";
+import { adaptDbFaqsToFaqs } from "@/lib/utils/faq-adapter";
+import { createClient } from "@/lib/supabase/server";
 
 async function getFaqs() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-  
-  const res = await fetch(`${baseUrl}/api/public/faqs`, {
-    next: { revalidate: 3600 },
-  });
-  
-  if (!res.ok) {
-    console.error('Failed to fetch FAQs');
+  try {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("faqs")
+      .select(
+        `
+        *,
+        faq_categories(id, name, slug)
+      `
+      )
+      .eq("is_active", true)
+      .is("deleted_at", null)
+      .order("display_order", { ascending: true });
+
+    if (error) {
+      console.error("Failed to fetch FAQs:", error);
+      return [];
+    }
+
+    return adaptDbFaqsToFaqs(data || []);
+  } catch (error) {
+    console.error("Error fetching FAQs:", error);
     return [];
   }
-  
-  const { data } = await res.json();
-  return adaptDbFaqsToFaqs(data || []);
 }
 
 async function getCategories() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-  
-  const res = await fetch(`${baseUrl}/api/public/faq-categories`, {
-    next: { revalidate: 3600 },
-  });
-  
-  if (!res.ok) return [];
-  const { data } = await res.json();
-  return data || [];
+  try {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("faq_categories")
+      .select("*")
+      .eq("is_active", true)
+      .order("display_order", { ascending: true });
+
+    if (error) {
+      console.error("Failed to fetch FAQ categories:", error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error("Error fetching FAQ categories:", error);
+    return [];
+  }
 }
 
 export async function FaqsContent() {
-  const [faqs, categories] = await Promise.all([
-    getFaqs(),
-    getCategories(),
-  ]);
-  
-  return (
-    <FaqsClientView
-      initialFaqs={faqs}
-      categories={categories}
-    />
-  );
+  const [faqs, categories] = await Promise.all([getFaqs(), getCategories()]);
+
+  return <FaqsClientView initialFaqs={faqs} categories={categories} />;
 }

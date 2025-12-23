@@ -1,20 +1,23 @@
 // app/page.tsx
-import { Suspense } from 'react';
-import { HeroSection } from '@/components/shared/hero-section';
-import { InstagramFeed } from '@/components/shared/instagram-feed';
+import { Suspense } from "react";
+import { HeroSection } from "@/components/shared/hero-section";
+import { InstagramFeed } from "@/components/shared/instagram-feed";
 import {
   StatsBar,
   CoreServicesSection,
   WhoWeServeSection,
   WhyChooseUsSection,
   CtaSection,
-} from '@/components/home';
-import { TestimonialsSection } from '@/components/home/testimonials-section';
-import { TestimonialsSkeleton } from '@/components/skeletons';
-import { CtaButton } from '@/components/shared/cta-button';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+} from "@/components/home";
+import { TestimonialsSection } from "@/components/home/testimonials-section";
+import { TestimonialsSkeleton } from "@/components/skeletons";
+import { CtaButton } from "@/components/shared/cta-button";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 3600; // Revalidate every hour
 
 export default function HomePage() {
   return (
@@ -23,7 +26,7 @@ export default function HomePage() {
       <HeroSection
         title={
           <span className="leading-tight">
-            Crafting Unforgettable{' '}
+            Crafting Unforgettable{" "}
             <span className="text-accent relative inline-block">
               Experiences
               <svg
@@ -38,7 +41,7 @@ export default function HomePage() {
                   fill="none"
                 />
               </svg>
-            </span>{' '}
+            </span>{" "}
             for Every Occasion
           </span>
         }
@@ -65,27 +68,27 @@ export default function HomePage() {
           </Button>
         </div>
       </HeroSection>
-      
+
       {/* Stats Bar */}
       <StatsBar />
-      
+
       {/* Core Services */}
       <CoreServicesSection />
-      
+
       {/* Who We Serve */}
       <WhoWeServeSection />
-      
+
       {/* Why Choose Us */}
       <WhyChooseUsSection />
-      
+
       {/* Testimonials - Server Component with Suspense */}
       <Suspense fallback={<TestimonialsSkeleton />}>
         <TestimonialsSection />
       </Suspense>
-      
+
       {/* Instagram Feed */}
       <InstagramFeed />
-      
+
       {/* CTA Section */}
       <CtaSection />
     </div>

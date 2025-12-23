@@ -1,12 +1,16 @@
 // app/faqs/page.tsx
-import { Suspense } from 'react';
-import { HeroSection } from '@/components/shared/hero-section';
-import { FaqsSkeleton } from '@/components/skeletons';
-import { FaqsContent } from '@/components/faqs/faqs-content';
+import { Suspense } from "react";
+import { HeroSection } from "@/components/shared/hero-section";
+import { FaqsSkeleton } from "@/components/skeletons";
+import { FaqsContent } from "@/components/faqs/faqs-content";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 3600; // Revalidate every hour
 
 export const metadata = {
-  title: 'FAQs - Frequently Asked Questions | Pavilion360 Event Production',
-  description: 'Quick answers to common questions about our services, rentals, pricing, and event production process.',
+  title: "FAQs - Frequently Asked Questions | Pavilion360 Event Production",
+  description:
+    "Quick answers to common questions about our services, rentals, pricing, and event production process.",
 };
 
 export default function FaqsPage() {

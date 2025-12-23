@@ -1,12 +1,16 @@
 // app/services/page.tsx
-import { Suspense } from 'react';
-import { HeroSection } from '@/components/shared/hero-section';
-import { ServicesGridSkeleton } from '@/components/skeletons';
-import { ServicesContent } from '@/components/services/services-content';
+import { Suspense } from "react";
+import { HeroSection } from "@/components/shared/hero-section";
+import { ServicesGridSkeleton } from "@/components/skeletons";
+import { ServicesContent } from "@/components/services/services-content";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 3600; // Revalidate every hour
 
 export const metadata = {
-  title: 'Our Services - Event Production Services | Pavilion360',
-  description: 'Comprehensive event solutions from concept to execution. Audio visual, event planning, creative design, and more.',
+  title: "Our Services - Event Production Services | Pavilion360",
+  description:
+    "Comprehensive event solutions from concept to execution. Audio visual, event planning, creative design, and more.",
 };
 
 export default function ServicesPage() {

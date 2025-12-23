@@ -28,10 +28,10 @@ interface DbBlogPost {
   excerpt: string | null;
   content?: any;
   thumbnail_url: string | null;
-  author_name: string;
+  author_name: string | null;
   read_time_minutes: number | null;
   published_at: string | null;
-  is_featured: boolean;
+  is_featured: boolean | null;
   seo_title?: string | null;
   seo_description?: string | null;
   seo_image_url?: string | null;
@@ -50,11 +50,11 @@ interface DbBlogPost {
 }
 
 export function formatDate(dateString: string | null): string {
-  if (!dateString) return '';
-  return new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+  if (!dateString) return "";
+  return new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 }
 
@@ -63,24 +63,26 @@ export function adaptDbPostToPost(dbPost: DbBlogPost): BlogPost {
     id: dbPost.id,
     title: dbPost.title,
     slug: dbPost.slug,
-    excerpt: dbPost.excerpt || '',
-    thumbnail: dbPost.thumbnail_url || '/placeholder.svg',
-    category: dbPost.blog_categories?.name || 'Uncategorized',
-    categorySlug: dbPost.blog_categories?.slug || 'uncategorized',
-    author: dbPost.author_name,
-    readTime: dbPost.read_time_minutes ? `${dbPost.read_time_minutes} min read` : '',
+    excerpt: dbPost.excerpt || "",
+    thumbnail: dbPost.thumbnail_url || "/placeholder.svg",
+    category: dbPost.blog_categories?.name || "Uncategorized",
+    categorySlug: dbPost.blog_categories?.slug || "uncategorized",
+    author: dbPost.author_name || "Unknown Author",
+    readTime: dbPost.read_time_minutes
+      ? `${dbPost.read_time_minutes} min read`
+      : "",
     date: formatDate(dbPost.published_at),
-    isFeatured: dbPost.is_featured,
+    isFeatured: dbPost.is_featured ?? false,
   };
 }
 
 export function adaptDbPostToPostDetail(dbPost: DbBlogPost): BlogPostDetail {
   const base = adaptDbPostToPost(dbPost);
-  
+
   const tags = (dbPost.blog_post_tags || [])
-    .map(bpt => bpt.tags?.name)
+    .map((bpt) => bpt.tags?.name)
     .filter(Boolean) as string[];
-  
+
   return {
     ...base,
     content: dbPost.content || {},

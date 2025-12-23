@@ -2,22 +2,29 @@
 import { ServiceCard } from "./service-card";
 import { adaptDbServicesToServices } from "@/lib/utils/service-adapter";
 import type { Service } from "@/lib/types/services";
-import { getBaseUrl } from "@/lib/utils/url";
+import { createClient } from "@/lib/supabase/server";
 
 async function getServices(): Promise<Service[]> {
-  const baseUrl = getBaseUrl();
+  try {
+    const supabase = await createClient();
 
-  const res = await fetch(`${baseUrl}/api/public/services`, {
-    next: { revalidate: 3600 },
-  });
+    const { data, error } = await supabase
+      .from("services")
+      .select("*")
+      .eq("is_active", true)
+      .is("deleted_at", null)
+      .order("display_order", { ascending: true });
 
-  if (!res.ok) {
-    console.error("Failed to fetch services");
+    if (error) {
+      console.error("Failed to fetch services:", error);
+      return [];
+    }
+
+    return adaptDbServicesToServices(data || []);
+  } catch (error) {
+    console.error("Error fetching services:", error);
     return [];
   }
-
-  const { data } = await res.json();
-  return adaptDbServicesToServices(data || []);
 }
 
 export async function ServicesContent() {
