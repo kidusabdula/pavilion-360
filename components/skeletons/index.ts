@@ -8,3 +8,5 @@ export { VenuesGridSkeleton } from './venues-grid-skeleton';
 export { PortfolioGridSkeleton } from './portfolio-grid-skeleton';
 export { PortfolioDetailSkeleton } from './portfolio-detail-skeleton';
 export { FaqsSkeleton } from './faqs-skeleton';
+export { BlogGridSkeleton } from './blog-grid-skeleton';
+export { BlogDetailSkeleton } from './blog-detail-skeleton';
