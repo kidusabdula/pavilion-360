@@ -1,23 +1,25 @@
 import { TestimonialCard } from "@/components/shared/testimonial-card";
 import { adaptDbTestimonialsToTestimonials } from "@/lib/utils/testimonial-adapter";
+import { createClient } from "@/lib/supabase/server";
 
 async function getFeaturedTestimonials() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-
   try {
-    const res = await fetch(
-      `${baseUrl}/api/public/testimonials?featured=true&limit=3`,
-      {
-        next: { revalidate: 3600 },
-      }
-    );
+    const supabase = await createClient();
 
-    if (!res.ok) {
-      console.error("Failed to fetch testimonials", res.statusText);
+    const { data, error } = await supabase
+      .from("testimonials")
+      .select("*")
+      .eq("is_featured", true)
+      .eq("is_active", true)
+      .is("deleted_at", null)
+      .order("display_order", { ascending: true })
+      .limit(3);
+
+    if (error) {
+      console.error("Failed to fetch testimonials:", error);
       return [];
     }
 
-    const { data } = await res.json();
     return adaptDbTestimonialsToTestimonials(data || []);
   } catch (error) {
     console.error("Error fetching testimonials:", error);

@@ -11,6 +11,9 @@ import {
   CtaSection,
 } from "@/components/about/about-client-sections";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 3600; // Revalidate every hour
+
 export const metadata = {
   title: "About Pavilion360 | Indianapolis Event Production Company",
   description:

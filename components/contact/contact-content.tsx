@@ -1,34 +1,48 @@
 // components/contact/contact-content.tsx
 import { ContactForm } from "@/components/forms/contact-form";
+import { createClient } from "@/lib/supabase/server";
 
 async function getEventTypes() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-
   try {
-    const res = await fetch(`${baseUrl}/api/public/event-types`, {
-      next: { revalidate: 3600 },
-    });
+    const supabase = await createClient();
 
-    if (!res.ok) return [];
-    const { data } = await res.json();
+    const { data, error } = await supabase
+      .from("event_types")
+      .select("*")
+      .eq("is_active", true)
+      .order("display_order", { ascending: true });
+
+    if (error) {
+      console.error("Failed to fetch event types:", error);
+      return [];
+    }
+
     return data || [];
-  } catch {
+  } catch (error) {
+    console.error("Error fetching event types:", error);
     return [];
   }
 }
 
 async function getServices() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-
   try {
-    const res = await fetch(`${baseUrl}/api/public/services`, {
-      next: { revalidate: 3600 },
-    });
+    const supabase = await createClient();
 
-    if (!res.ok) return [];
-    const { data } = await res.json();
+    const { data, error } = await supabase
+      .from("services")
+      .select("*")
+      .eq("is_active", true)
+      .is("deleted_at", null)
+      .order("display_order", { ascending: true });
+
+    if (error) {
+      console.error("Failed to fetch services:", error);
+      return [];
+    }
+
     return data || [];
-  } catch {
+  } catch (error) {
+    console.error("Error fetching services:", error);
     return [];
   }
 }

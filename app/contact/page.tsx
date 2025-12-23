@@ -9,6 +9,9 @@ import { COMPANY_INFO } from "@/lib/constants/company";
 import { generateLocalBusinessSchema } from "@/lib/utils/seo";
 import { Mail, Phone, MapPin, Calendar } from "@/components/icons";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 3600; // Revalidate every hour
+
 export const metadata = {
   title: "Contact Us | Pavilion360 Event Production Indianapolis",
   description:

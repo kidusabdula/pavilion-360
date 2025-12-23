@@ -7,8 +7,8 @@ interface DbTestimonial {
   author_role: string | null;
   company: string | null;
   author_image_url: string | null;
-  is_featured: boolean;
-  display_order: number;
+  is_featured: boolean | null;
+  display_order: number | null;
 }
 
 export function adaptDbTestimonialToTestimonial(
