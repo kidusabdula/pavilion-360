@@ -327,16 +327,16 @@ export function ContactForm({ eventTypes, services }: ContactFormProps) {
                 <motion.div
                   key={service.id}
                   whileHover={{ scale: 1.01 }}
-                  className={`flex items-center space-x-3 p-3 rounded-lg border transition-all duration-200 cursor-pointer ${
+                  className={`flex items-center space-x-3 p-3 rounded-lg border transition-all duration-200 ${
                     isSelected
                       ? "border-accent/50 bg-accent/5"
                       : "border-border/50 hover:border-accent/30 hover:bg-muted/30"
                   }`}
-                  onClick={() => handleServiceToggle(service.id)}
                 >
                   <Checkbox
                     id={service.id}
                     checked={isSelected}
+                    onCheckedChange={() => handleServiceToggle(service.id)}
                     className="data-[state=checked]:bg-accent data-[state=checked]:border-accent"
                   />
                   <Label
