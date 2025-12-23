@@ -7,3 +7,4 @@ export { RentalDetailSkeleton } from './rental-detail-skeleton';
 export { VenuesGridSkeleton } from './venues-grid-skeleton';
 export { PortfolioGridSkeleton } from './portfolio-grid-skeleton';
 export { PortfolioDetailSkeleton } from './portfolio-detail-skeleton';
+export { FaqsSkeleton } from './faqs-skeleton';
