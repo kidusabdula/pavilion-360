@@ -1,9 +1,9 @@
 // components/home/core-services-section.tsx
-'use client';
-import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+"use client";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -28,14 +28,23 @@ const coreServices = [
   {
     title: "Audio / Visual Production",
     icon: ({ className }: { className?: string }) => (
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={className}
+      >
         <path d="M11 4.702a.705.705 0 0 0-.598-.698L7 3.5v13l3.402-.504a.705.705 0 0 0 .598-.698V4.702Z"></path>
         <path d="M17 3.5v13"></path>
         <path d="M14 5.5v11"></path>
       </svg>
     ),
-    color: "from-yellow-400 to-amber-500",
-    shadow: "shadow-amber-500/20",
     href: "/services/audio-visual-production",
     description:
       "State-of-the-art audio-visual event production services with cutting-edge technology and professional expertise.",
@@ -43,15 +52,24 @@ const coreServices = [
   {
     title: "Event Management",
     icon: ({ className }: { className?: string }) => (
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={className}
+      >
         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
         <line x1="16" y1="2" x2="16" y2="6"></line>
         <line x1="8" y1="2" x2="8" y2="6"></line>
         <line x1="3" y1="10" x2="21" y2="10"></line>
       </svg>
     ),
-    color: "from-amber-500 to-orange-500",
-    shadow: "shadow-orange-500/20",
     href: "/services/event-planning-management",
     description:
       "Comprehensive event management solutions from creative development to event production and beyond.",
@@ -59,14 +77,23 @@ const coreServices = [
   {
     title: "Creative Services",
     icon: ({ className }: { className?: string }) => (
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={className}
+      >
         <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
         <path d="M2 17l10 5 10-5"></path>
         <path d="M2 12l10 5 10-5"></path>
       </svg>
     ),
-    color: "from-yellow-500 to-yellow-600",
-    shadow: "shadow-yellow-500/20",
     href: "/services/creative-design",
     description:
       "Innovative creative development crafting unique themes, designs, and branding elements for impactful events.",
@@ -74,7 +101,18 @@ const coreServices = [
   {
     title: "Food & Beverage",
     icon: ({ className }: { className?: string }) => (
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={className}
+      >
         <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
         <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
         <line x1="6" y1="1" x2="6" y2="4"></line>
@@ -82,8 +120,6 @@ const coreServices = [
         <line x1="14" y1="1" x2="14" y2="4"></line>
       </svg>
     ),
-    color: "from-orange-400 to-amber-600",
-    shadow: "shadow-orange-500/20",
     href: "/services/beverage-services",
     description:
       "Top-tier food and beverage coordination, partnering with renowned caterers for exceptional culinary experiences.",
@@ -134,9 +170,7 @@ export function CoreServicesSection() {
               <Link href={service.href} className="block h-full">
                 <div className="relative h-full flex flex-col items-center text-center p-8 rounded-3xl bg-card border border-border/50 transition-all duration-500 hover:border-accent/30 hover:shadow-2xl hover:shadow-accent/5 group-hover:bg-accent/5">
                   {/* Icon Circle */}
-                  <div
-                    className={`mb-8 flex h-24 w-24 items-center justify-center rounded-2xl bg-linear-to-br ${service.color} text-white shadow-lg ${service.shadow} transition-all duration-500 group-hover:scale-110 group-hover:rotate-3`}
-                  >
+                  <div className="mb-8 flex h-24 w-24 items-center justify-center rounded-2xl bg-neutral-950 text-accent shadow-xl transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 group-hover:bg-accent group-hover:text-white">
                     <service.icon className="h-10 w-10" />
                   </div>
 
