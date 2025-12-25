@@ -2,7 +2,6 @@
 // CMS API for rentals - GET (list) and POST (create)
 import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { createRentalSchema } from "@/lib/schemas/rental.schema";
 import {
   ApiError,
   handleApiError,
@@ -93,15 +92,19 @@ export async function POST(request: NextRequest) {
     const supabase = await createClient();
     const body = await request.json();
 
-    // Validate input
-    const validationResult = createRentalSchema.safeParse(body);
+    // Validate input using rentalFormSchema (includes tags/features)
+    const { rentalFormSchema } = await import("@/lib/schemas/rental.schema");
+    const validationResult = rentalFormSchema.safeParse(body);
     if (!validationResult.success) {
       throw ApiError.badRequest("Validation failed", {
         validation: validationResult.error.errors.map((e) => e.message),
       });
     }
 
-    const rentalData = validationResult.data;
+    const formData = validationResult.data;
+
+    // Extract tags and features (not in DB schema)
+    const { tags, features, ...rentalData } = formData;
 
     // Check for duplicate slug
     const { data: existingRental } = await supabase
@@ -115,7 +118,7 @@ export async function POST(request: NextRequest) {
       throw ApiError.conflict("A rental item with this slug already exists");
     }
 
-    // Insert rental
+    // Insert rental (database schema doesn't include tags/features directly)
     const { data: rental, error: rentalError } = await supabase
       .from("rental_items")
       .insert(rentalData)
@@ -124,6 +127,19 @@ export async function POST(request: NextRequest) {
 
     if (rentalError) {
       throw ApiError.internal(rentalError.message);
+    }
+
+    // TODO: Handle tags insertion into rental_item_tags junction table
+    // For now, we'll log them so you can see they're being received
+    if (tags && tags.length > 0) {
+      console.log("Tags to insert:", tags, "for rental:", rental.id);
+      // Future: Insert into rental_item_tags junction table
+    }
+
+    // TODO: Handle features (store in specs or separate column)
+    if (features && features.length > 0) {
+      console.log("Features to handle:", features, "for rental:", rental.id);
+      // Future: Store in specs object or add features column
     }
 
     return Response.json(successResponse(rental), { status: 201 });

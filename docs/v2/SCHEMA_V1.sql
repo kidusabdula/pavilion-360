@@ -238,7 +238,8 @@ CREATE TABLE rental_items (
     thumbnail_url TEXT,
     images TEXT[] DEFAULT '{}',
     short_description TEXT,
-    details TEXT,
+    description TEXT, -- Full description/details of the rental item
+    daily_rate VARCHAR(50), -- Daily rental rate (flexible string format)
     specs JSONB DEFAULT '[]', -- Array of spec strings
     is_popular BOOLEAN DEFAULT false,
     is_active BOOLEAN DEFAULT true,

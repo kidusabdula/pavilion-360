@@ -11,7 +11,7 @@ import { LoadingSkeleton } from "@/components/cms/shared/loading-skeleton";
 import { RentalForm } from "@/components/cms/modules/rentals/rental-form";
 import { useRental, useUpdateRental } from "@/hooks/cms/use-rentals";
 import { toast } from "sonner";
-import type { CreateRentalInput } from "@/lib/schemas/rental.schema";
+import type { RentalFormInput } from "@/lib/schemas/rental.schema";
 
 interface EditRentalPageProps {
   params: Promise<{ id: string }>;
@@ -25,7 +25,7 @@ export default function EditRentalPage({ params }: EditRentalPageProps) {
 
   const rental = data?.data;
 
-  const handleSubmit = async (formData: CreateRentalInput) => {
+  const handleSubmit = async (formData: RentalFormInput) => {
     try {
       await updateMutation.mutateAsync({ id, ...formData });
       toast.success("Rental item updated successfully");
@@ -77,21 +77,20 @@ export default function EditRentalPage({ params }: EditRentalPageProps) {
     );
   }
 
-  // Transform rental data for form - convert null to undefined/defaults
-  // Map database fields to form schema fields
-  const initialData: Partial<CreateRentalInput> = {
+  // Transform rental data for form
+  const initialData: Partial<RentalFormInput> = {
     name: rental.name,
     slug: rental.slug,
     category_id: rental.category_id,
-    description: rental.details ?? "", // DB: details -> Form: description
+    description: rental.description ?? "",
     short_description: rental.short_description ?? undefined,
     thumbnail_url: rental.thumbnail_url ?? undefined,
-    images: rental.images ?? [], // Convert null to empty array
-    daily_rate: undefined, // Not in DB schema
+    images: rental.images ?? [],
+    daily_rate: rental.daily_rate ?? undefined,
     specs: (rental.specs as Record<string, string>) ?? {},
     tags: [], // Will be populated from junction table if needed
     features: [], // Will be populated from specs if needed
-    is_featured: rental.is_popular ?? false, // DB: is_popular -> Form: is_featured
+    is_popular: rental.is_popular ?? false,
     is_active: rental.is_active ?? true,
     display_order: rental.display_order ?? 0,
   };

@@ -22,14 +22,14 @@ import {
 } from "@/components/ui/select";
 import { ImageUpload } from "@/components/cms/forms/image-upload";
 import {
-  createRentalSchema,
-  type CreateRentalInput,
+  rentalFormSchema,
+  type RentalFormInput,
 } from "@/lib/schemas/rental.schema";
 import { generateSlug } from "@/lib/utils/slug";
 import { useRentalCategories } from "@/hooks/cms/use-rentals";
 
 // Schema for the form state (with objects for field arrays)
-const formSchema = createRentalSchema.extend({
+const formSchema = rentalFormSchema.extend({
   images: z.array(z.object({ url: z.string().url() })).default([]),
   tags: z.array(z.object({ value: z.string() })).default([]),
   features: z.array(z.object({ value: z.string() })).default([]),
@@ -38,8 +38,8 @@ const formSchema = createRentalSchema.extend({
 type FormValues = z.infer<typeof formSchema>;
 
 interface RentalFormProps {
-  initialData?: Partial<CreateRentalInput> & { id?: string };
-  onSubmit: (data: CreateRentalInput) => Promise<void>;
+  initialData?: Partial<RentalFormInput> & { id?: string };
+  onSubmit: (data: RentalFormInput) => Promise<void>;
   isSubmitting?: boolean;
   isEdit?: boolean;
 }
@@ -67,7 +67,7 @@ export function RentalForm({
       specs: initialData?.specs || {},
       tags: initialData?.tags?.map((value) => ({ value })) || [],
       features: initialData?.features?.map((value) => ({ value })) || [],
-      is_featured: initialData?.is_featured ?? false,
+      is_popular: initialData?.is_popular ?? false, // Changed from is_featured
       is_active: initialData?.is_active ?? true,
       display_order: initialData?.display_order || 0,
     } as any, // Cast to any for defaultValues to avoid deep partial issues with initialData
@@ -111,7 +111,7 @@ export function RentalForm({
 
   const handleFormSubmit = async (data: FormValues) => {
     // Transform back to original schema format
-    const transformedData: CreateRentalInput = {
+    const transformedData: RentalFormInput = {
       ...data,
       images: data.images.map((img) => img.url),
       tags: data.tags.map((t) => t.value),
@@ -467,15 +467,15 @@ export function RentalForm({
           <div className="grid gap-4 md:grid-cols-2">
             <div className="flex items-center justify-between rounded-lg border border-border p-4">
               <div>
-                <Label htmlFor="is_featured">Featured</Label>
+                <Label htmlFor="is_popular">Popular</Label>
                 <p className="text-sm text-muted-foreground">
-                  Highlight this item
+                  Mark as popular item
                 </p>
               </div>
               <Switch
-                id="is_featured"
-                checked={watch("is_featured")}
-                onCheckedChange={(checked) => setValue("is_featured", checked)}
+                id="is_popular"
+                checked={watch("is_popular")}
+                onCheckedChange={(checked) => setValue("is_popular", checked)}
               />
             </div>
 
