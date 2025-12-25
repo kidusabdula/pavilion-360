@@ -2,7 +2,7 @@
 // Media upload API for Supabase Storage
 
 import { NextRequest } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import {
   ApiError,
   handleApiError,
@@ -12,7 +12,8 @@ import { v4 as uuidv4 } from "uuid";
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    // Use admin client to bypass RLS policies for media uploads
+    const supabase = createAdminClient();
 
     const formData = await request.formData();
     const file = formData.get("file") as File | null;

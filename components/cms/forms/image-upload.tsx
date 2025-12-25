@@ -192,38 +192,51 @@ export function ImageUpload({
           )}
         </div>
       ) : (
-        // Empty state with upload trigger
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger asChild>
-            <button
-              type="button"
-              disabled={disabled}
-              className={cn(
-                "flex w-full cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-muted-foreground/25 bg-muted/30 transition-colors hover:border-accent hover:bg-muted/50",
-                aspectClasses[aspectRatio],
-                disabled && "cursor-not-allowed opacity-50"
-              )}
-            >
-              <Upload className="mb-3 h-10 w-10 text-muted-foreground" />
-              <span className="text-sm font-medium text-muted-foreground">
-                Click to upload
-              </span>
-              <span className="mt-1 text-xs text-muted-foreground">
-                PNG, JPG, WEBP up to 10MB
-              </span>
-            </button>
-          </DialogTrigger>
-          <ImageUploadDialog
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            urlInput={urlInput}
-            setUrlInput={setUrlInput}
-            handleUrlSubmit={handleUrlSubmit}
-            triggerFileSelect={triggerFileSelect}
-            isUploading={isUploading}
-            previewUrl={previewUrl}
-          />
-        </Dialog>
+        // Empty state with upload trigger - directly opens file explorer
+        <div className="space-y-2">
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={triggerFileSelect}
+            className={cn(
+              "flex w-full cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-muted-foreground/25 bg-muted/30 transition-colors hover:border-accent hover:bg-muted/50",
+              aspectClasses[aspectRatio],
+              disabled && "cursor-not-allowed opacity-50"
+            )}
+          >
+            <Upload className="mb-3 h-10 w-10 text-muted-foreground" />
+            <span className="text-sm font-medium text-muted-foreground">
+              Click to upload
+            </span>
+            <span className="mt-1 text-xs text-muted-foreground">
+              PNG, JPG, WEBP up to 10MB
+            </span>
+          </button>
+
+          {/* URL option */}
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+              <button
+                type="button"
+                disabled={disabled}
+                className="w-full text-center text-xs text-muted-foreground hover:text-accent transition-colors"
+              >
+                <LinkIcon className="inline h-3 w-3 mr-1" />
+                Or use URL instead
+              </button>
+            </DialogTrigger>
+            <ImageUploadDialog
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              urlInput={urlInput}
+              setUrlInput={setUrlInput}
+              handleUrlSubmit={handleUrlSubmit}
+              triggerFileSelect={triggerFileSelect}
+              isUploading={isUploading}
+              previewUrl={previewUrl}
+            />
+          </Dialog>
+        </div>
       )}
 
       {/* Hidden file input */}
