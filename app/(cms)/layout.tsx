@@ -10,5 +10,9 @@ export default function CMSLayout({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
   }
 
-  return <CMSShell>{children}</CMSShell>;
+  return (
+    <div suppressHydrationWarning>
+      <CMSShell>{children}</CMSShell>
+    </div>
+  );
 }

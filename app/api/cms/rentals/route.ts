@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
 
     // Query params
     const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "50");
+    const limit = parseInt(searchParams.get("limit") || "200");
     const search = searchParams.get("search") || "";
     const sortBy = searchParams.get("sortBy") || "display_order";
     const sortOrder = (searchParams.get("sortOrder") || "asc") as
