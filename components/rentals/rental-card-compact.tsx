@@ -16,10 +16,19 @@ export function RentalCardCompact({ item }: RentalCardCompactProps) {
   const { items, addItem } = useQuoteBasket();
   const isInBasket = items.some((i) => i.id === item.id);
 
-  // Generate SEO-friendly alt text from tags
-  const altText = `${item.name} - ${item.tags
-    .slice(0, 3)
-    .join(", ")} - Event rental equipment`;
+  // Generate SEO-friendly alt text
+  const altText = `${item.name}${
+    item.collection ? ` - ${item.collection}` : ""
+  } - Event rental equipment`;
+
+  // Build catalog details
+  const catalogDetails: string[] = [];
+  if (item.collection) catalogDetails.push(item.collection);
+  if (item.color) catalogDetails.push(item.color);
+  if (item.finish) catalogDetails.push(item.finish);
+
+  // Get display description
+  const displayDescription = item.shortDescription || item.description || "";
 
   return (
     <motion.div
@@ -30,12 +39,12 @@ export function RentalCardCompact({ item }: RentalCardCompactProps) {
       className="group flex gap-4 p-4 bg-linear-to-r from-card to-card/80 border border-border/50 rounded-xl transition-all duration-300 hover:shadow-xl hover:shadow-accent/5 hover:border-accent/30"
     >
       {/* Image */}
-      <div className="relative w-24 h-24 sm:w-28 sm:h-28 shrink-0 overflow-hidden rounded-lg bg-muted">
+      <div className="relative w-24 h-24 sm:w-32 sm:h-32 shrink-0 overflow-hidden rounded-lg bg-muted">
         <Image
           src={item.thumbnail || "/placeholder.svg"}
           alt={altText}
           fill
-          sizes="(max-width: 640px) 96px, 112px"
+          sizes="(max-width: 640px) 96px, 128px"
           className="object-cover transition-transform duration-500 group-hover:scale-110"
         />
         {/* Subtle overlay */}
@@ -52,14 +61,24 @@ export function RentalCardCompact({ item }: RentalCardCompactProps) {
       {/* Content */}
       <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
         <div>
-          <div className="flex items-start justify-between gap-2 mb-1.5">
+          <div className="flex items-start justify-between gap-2 mb-1">
             <div className="flex-1 min-w-0">
               <h3 className="font-semibold text-sm leading-tight truncate group-hover:text-accent transition-colors duration-300">
                 {item.name}
               </h3>
-              <p className="text-xs text-muted-foreground/60 font-mono">
-                {item.sku}
-              </p>
+              {/* Collection/Color/Finish info */}
+              {catalogDetails.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {catalogDetails.slice(0, 3).map((detail, idx) => (
+                    <span
+                      key={idx}
+                      className="text-[9px] px-1 py-0.5 rounded bg-accent/10 text-accent border border-accent/20"
+                    >
+                      {detail}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
             {item.popular && (
               <Badge className="text-[10px] px-1.5 py-0.5 shrink-0 bg-accent/10 text-accent border-accent/20">
@@ -68,28 +87,47 @@ export function RentalCardCompact({ item }: RentalCardCompactProps) {
             )}
           </div>
 
-          <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed mb-2">
-            {item.shortDescription}
-          </p>
-        </div>
+          {/* Description */}
+          {displayDescription && (
+            <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed mb-2">
+              {displayDescription}
+            </p>
+          )}
 
-        {/* Tags */}
-        <div className="flex flex-wrap gap-1">
-          {item.tags.slice(0, 3).map((tag) => (
-            <Badge
-              key={tag}
-              variant="outline"
-              className="text-[10px] capitalize bg-muted/30 border-border/30 py-0"
-            >
-              {tag}
-            </Badge>
-          ))}
-          {item.tags.length > 3 && (
-            <span className="text-[10px] text-muted-foreground">
-              +{item.tags.length - 3}
-            </span>
+          {/* Specs (show first 2) */}
+          {item.specs.length > 0 && (
+            <div className="flex flex-wrap gap-x-3 gap-y-0.5 mb-2">
+              {item.specs.slice(0, 2).map((spec, index) => (
+                <span
+                  key={index}
+                  className="text-[10px] text-muted-foreground/80"
+                >
+                  • {spec}
+                </span>
+              ))}
+            </div>
           )}
         </div>
+
+        {/* Event Types */}
+        {item.recommendedEventTypes.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {item.recommendedEventTypes.slice(0, 4).map((eventType) => (
+              <Badge
+                key={eventType}
+                variant="outline"
+                className="text-[9px] capitalize bg-muted/30 border-border/30 py-0"
+              >
+                {eventType}
+              </Badge>
+            ))}
+            {item.recommendedEventTypes.length > 4 && (
+              <span className="text-[9px] text-muted-foreground">
+                +{item.recommendedEventTypes.length - 4}
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Action */}

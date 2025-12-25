@@ -3,51 +3,44 @@ export interface RentalItem {
   name: string;
   slug: string;
   sku: string;
-  category: RentalCategory;
+  category: string;
   subcategory?: string;
   thumbnail: string;
   images?: string[];
   shortDescription: string;
+  description?: string;
   specs: string[];
   tags: string[];
   recommendedEventTypes: EventType[];
   details?: string;
   popular?: boolean;
+  // New catalog fields
+  collection?: string;
+  color?: string;
+  finish?: string;
+  quantity?: number;
 }
 
 export type RentalCategory =
-  | "Lounge Furniture"
+  | "Audio"
+  | "Barricades"
   | "Bars & Shelves"
-  | "Tables"
+  | "Decks & Staging"
+  | "Effects"
+  | "Food & Beverage"
+  | "Lighting"
+  | "Miscellaneous"
   | "Seating"
-  | "Room Dividers"
-  | "Pipe & Drape"
-  | "Flooring"
-  | "Decks And Foundations"
-  | "Stageline Stages"
-  | "Staging"
   | "Trussing"
-  | "Crowd Control"
-  | "Audio Visual"
-  | "Special Effects"
-  | "Live Entertainment"
-  | "Scenic Decor"
-  | "Food & Beverage";
+  | "Video"
+  | string; // Allow dynamic categories
 
 export type EventType =
   | "Corporate"
   | "Wedding"
   | "Gala"
   | "Festival"
-  | "Nonprofit"
   | "Social"
   | "Concert"
   | "Outdoor"
-  | "Large Outdoor"
-  | "BBQ"
-  | "Catering"
-  | "Trade Show"
-  | "Red Carpet"
-  | "VIP"
-  | "Club"
-  | "Family";
+  | string; // Allow dynamic event types

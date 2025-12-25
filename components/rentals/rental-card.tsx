@@ -22,10 +22,16 @@ export function RentalCard({ item }: RentalCardProps) {
   const { items, addItem } = useQuoteBasket();
   const isInBasket = items.some((i) => i.id === item.id);
 
-  // Generate SEO-friendly alt text from tags
-  const altText = `${item.name} - ${item.tags
-    .slice(0, 3)
-    .join(", ")} - Event rental equipment`;
+  // Generate SEO-friendly alt text
+  const altText = `${item.name}${
+    item.collection ? ` - ${item.collection}` : ""
+  } - Event rental equipment`;
+
+  // Build catalog details badges
+  const catalogDetails: string[] = [];
+  if (item.collection) catalogDetails.push(item.collection);
+  if (item.color) catalogDetails.push(item.color);
+  if (item.finish) catalogDetails.push(item.finish);
 
   return (
     <motion.div
@@ -93,47 +99,71 @@ export function RentalCard({ item }: RentalCardProps) {
             <h3 className="font-semibold leading-tight text-balance line-clamp-2 group-hover:text-accent transition-colors duration-300">
               {item.name}
             </h3>
-            <p className="text-xs text-muted-foreground/70 font-mono">
-              {item.sku}
-            </p>
+            {/* Collection/Color/Finish badges */}
+            {catalogDetails.length > 0 && (
+              <div className="flex flex-wrap gap-1 pt-1">
+                {catalogDetails.map((detail, idx) => (
+                  <span
+                    key={idx}
+                    className="inline-flex items-center text-[10px] px-1.5 py-0.5 rounded-md bg-accent/10 text-accent border border-accent/20"
+                  >
+                    {detail}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         </CardHeader>
 
         <CardContent className="space-y-3 pb-3">
-          <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-            {item.shortDescription}
-          </p>
+          {/* Short Description */}
+          {item.shortDescription && (
+            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+              {item.shortDescription}
+            </p>
+          )}
 
-          {/* Tags */}
-          <div className="flex flex-wrap gap-1.5">
-            {item.tags.slice(0, 3).map((tag) => (
-              <Badge
-                key={tag}
-                variant="outline"
-                className="text-xs capitalize bg-muted/50 border-border/30 hover:border-accent/50 transition-colors"
-              >
-                {tag}
-              </Badge>
-            ))}
-            {item.tags.length > 3 && (
-              <Badge
-                variant="outline"
-                className="text-xs bg-muted/50 border-border/30"
-              >
-                +{item.tags.length - 3}
-              </Badge>
-            )}
-          </div>
+          {/* Extended Description (if no short description) */}
+          {!item.shortDescription && item.description && (
+            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+              {item.description}
+            </p>
+          )}
 
-          {/* Specs */}
-          <ul className="space-y-1.5 text-sm">
-            {item.specs.slice(0, 2).map((spec, index) => (
-              <li key={index} className="flex items-start gap-2">
-                <span className="text-accent mt-0.5 text-xs">●</span>
-                <span className="text-muted-foreground text-xs">{spec}</span>
-              </li>
-            ))}
-          </ul>
+          {/* Specs - Show if we have any */}
+          {item.specs.length > 0 && (
+            <ul className="space-y-1">
+              {item.specs.slice(0, 3).map((spec, index) => (
+                <li key={index} className="flex items-start gap-2">
+                  <span className="text-accent mt-0.5 text-xs">●</span>
+                  <span className="text-muted-foreground text-xs">{spec}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {/* Event Types as subtle tags */}
+          {item.recommendedEventTypes.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              {item.recommendedEventTypes.slice(0, 4).map((eventType) => (
+                <Badge
+                  key={eventType}
+                  variant="outline"
+                  className="text-[10px] capitalize bg-muted/50 border-border/30 hover:border-accent/50 transition-colors py-0"
+                >
+                  {eventType}
+                </Badge>
+              ))}
+              {item.recommendedEventTypes.length > 4 && (
+                <Badge
+                  variant="outline"
+                  className="text-[10px] bg-muted/50 border-border/30 py-0"
+                >
+                  +{item.recommendedEventTypes.length - 4}
+                </Badge>
+              )}
+            </div>
+          )}
         </CardContent>
 
         <CardFooter className="pt-0">

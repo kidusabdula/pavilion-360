@@ -1,8 +1,8 @@
 // app/(cms)/cms/page.tsx
 import { Suspense } from "react";
 import { PageHeader } from "@/components/cms/shared/page-header";
-import { DashboardContent } from "./dashboard-content";
-import { DashboardSkeleton } from "./dashboard-skeleton";
+import { DashboardContent } from "@/components/cms/modules/dashboard/dashboard-content";
+import { DashboardSkeleton } from "@/components/cms/modules/dashboard/dashboard-skeleton";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 60; // Revalidate every minute for fresh stats

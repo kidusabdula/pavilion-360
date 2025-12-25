@@ -9,6 +9,7 @@
     "start": "next start",
     "generate-types": "npx tsx scripts/generate-types.ts",
     "upload-images": "npx tsx scripts/upload-images-to-supabase.ts",
+    "seed-rentals": "npx tsx scripts/seed-rental-catalog.ts",
     "supabase:login": "npx supabase login",
     "supabase:types": "npx supabase gen types typescript --project-id $SUPABASE_PROJECT_REF --schema public > lib/supabase/database.types.ts"
   },
@@ -55,6 +56,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.4",
+    "csv-parse": "^6.1.0",
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
     "embla-carousel-react": "^8.5.1",
@@ -70,6 +72,7 @@
     "react-resizable-panels": "^2.1.7",
     "recharts": "^2.15.4",
     "sonner": "^1.7.4",
+    "supabase": "2.70.5",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^13.0.0",

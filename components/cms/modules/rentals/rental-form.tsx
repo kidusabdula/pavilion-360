@@ -64,10 +64,14 @@ export function RentalForm({
       thumbnail_url: initialData?.thumbnail_url || "",
       images: initialData?.images?.map((url) => ({ url })) || [],
       daily_rate: initialData?.daily_rate || "",
+      collection: initialData?.collection || "",
+      color: initialData?.color || "",
+      finish: initialData?.finish || "",
+      quantity: initialData?.quantity || 0,
       specs: initialData?.specs || {},
       tags: initialData?.tags?.map((value) => ({ value })) || [],
       features: initialData?.features?.map((value) => ({ value })) || [],
-      is_popular: initialData?.is_popular ?? false, // Changed from is_featured
+      is_popular: initialData?.is_popular ?? false,
       is_active: initialData?.is_active ?? true,
       display_order: initialData?.display_order || 0,
     } as any, // Cast to any for defaultValues to avoid deep partial issues with initialData
@@ -238,6 +242,56 @@ export function RentalForm({
             {...register("daily_rate")}
             placeholder="$500/day"
           />
+        </div>
+
+        {/* Catalog Fields */}
+        <div className="mt-6 pt-6 border-t border-border">
+          <h3 className="text-sm font-medium text-muted-foreground mb-4">
+            Catalog Details
+          </h3>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {/* Collection */}
+            <div className="space-y-2">
+              <Label htmlFor="collection">Collection</Label>
+              <Input
+                id="collection"
+                {...register("collection")}
+                placeholder="e.g., Avenue, Hayworth"
+              />
+            </div>
+
+            {/* Color */}
+            <div className="space-y-2">
+              <Label htmlFor="color">Color</Label>
+              <Input
+                id="color"
+                {...register("color")}
+                placeholder="e.g., Black, White, Gold"
+              />
+            </div>
+
+            {/* Finish */}
+            <div className="space-y-2">
+              <Label htmlFor="finish">Finish</Label>
+              <Input
+                id="finish"
+                {...register("finish")}
+                placeholder="e.g., Chrome, Stainless"
+              />
+            </div>
+
+            {/* Quantity */}
+            <div className="space-y-2">
+              <Label htmlFor="quantity">Quantity in Stock</Label>
+              <Input
+                id="quantity"
+                type="number"
+                {...register("quantity", { valueAsNumber: true })}
+                min={0}
+                placeholder="0"
+              />
+            </div>
+          </div>
         </div>
       </div>
 
