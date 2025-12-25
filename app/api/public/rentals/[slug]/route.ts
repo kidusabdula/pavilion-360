@@ -1,16 +1,17 @@
 // app/api/public/rentals/[slug]/route.ts
-import { NextRequest } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { NextRequest } from "next/server";
+import { createClient } from "@/lib/supabase/server";
 
 type Params = { params: Promise<{ slug: string }> };
 
 export async function GET(request: NextRequest, { params }: Params) {
   const { slug } = await params;
   const supabase = await createClient();
-  
+
   const { data: item, error } = await supabase
-    .from('rental_items')
-    .select(`
+    .from("rental_items")
+    .select(
+      `
       id,
       name,
       slug,
@@ -19,9 +20,13 @@ export async function GET(request: NextRequest, { params }: Params) {
       thumbnail_url,
       images,
       short_description,
-      details,
+      description,
       specs,
       is_popular,
+      collection,
+      color,
+      finish,
+      quantity,
       rental_categories (
         id,
         name,
@@ -41,23 +46,25 @@ export async function GET(request: NextRequest, { params }: Params) {
           slug
         )
       )
-    `)
-    .eq('slug', slug)
-    .eq('is_active', true)
-    .is('deleted_at', null)
+    `
+    )
+    .eq("slug", slug)
+    .eq("is_active", true)
+    .is("deleted_at", null)
     .single();
-  
+
   if (error || !item) {
     return Response.json(
-      { success: false, error: 'Rental item not found' },
+      { success: false, error: "Rental item not found" },
       { status: 404 }
     );
   }
-  
+
   // Get related items from same category
   const { data: relatedItems } = await supabase
-    .from('rental_items')
-    .select(`
+    .from("rental_items")
+    .select(
+      `
       id,
       name,
       slug,
@@ -67,13 +74,14 @@ export async function GET(request: NextRequest, { params }: Params) {
         name,
         slug
       )
-    `)
-    .eq('category_id', (item.rental_categories as any).id)
-    .neq('id', item.id)
-    .eq('is_active', true)
-    .is('deleted_at', null)
+    `
+    )
+    .eq("category_id", (item.rental_categories as any).id)
+    .neq("id", item.id)
+    .eq("is_active", true)
+    .is("deleted_at", null)
     .limit(4);
-  
+
   return Response.json({
     success: true,
     data: {

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -43,56 +44,59 @@ export function RentalCard({ item }: RentalCardProps) {
     >
       <Card className="group h-full overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-accent/10 hover:border-accent/30 bg-linear-to-b from-card to-card/80 border-border/50">
         {/* Image Container */}
-        <div className="relative aspect-4/3 overflow-hidden bg-muted">
-          <Image
-            src={item.thumbnail || "/placeholder.svg"}
-            alt={altText}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover transition-all duration-500 group-hover:scale-110"
-          />
-          {/* Overlay gradient on hover */}
-          <div className="absolute inset-0 bg-linear-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <Link href={`/rentals/${item.slug}`} className="block">
+          <div className="relative aspect-4/3 overflow-hidden bg-muted">
+            <Image
+              src={item.thumbnail || "/placeholder.svg"}
+              alt={altText}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover transition-all duration-500 group-hover:scale-110"
+            />
+            {/* Overlay gradient on hover */}
+            <div className="absolute inset-0 bg-linear-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-          {/* Popular badge */}
-          {item.popular && (
-            <Badge className="absolute top-3 right-3 bg-accent text-accent-foreground shadow-lg backdrop-blur-sm">
-              ★ Popular
-            </Badge>
-          )}
+            {/* Popular badge */}
+            {item.popular && (
+              <Badge className="absolute top-3 right-3 bg-accent text-accent-foreground shadow-lg backdrop-blur-sm">
+                ★ Popular
+              </Badge>
+            )}
 
-          {/* Category badge */}
-          <Badge
-            variant="outline"
-            className="absolute top-3 left-3 bg-background/80 backdrop-blur-sm border-border/50 text-xs"
-          >
-            {item.category}
-          </Badge>
-
-          {/* Quick add button overlay */}
-          <motion.div
-            className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Button
-              size="sm"
-              onClick={() => addItem(item)}
-              disabled={isInBasket}
-              className={`shadow-lg ${
-                isInBasket
-                  ? "bg-green-600 hover:bg-green-600"
-                  : "bg-accent hover:bg-accent/90"
-              }`}
+            {/* Category badge */}
+            <Badge
+              variant="outline"
+              className="absolute top-3 left-3 bg-background/80 backdrop-blur-sm border-border/50 text-xs"
             >
-              {isInBasket ? (
-                <Check className="h-4 w-4" />
-              ) : (
-                <Plus className="h-4 w-4" />
-              )}
-            </Button>
-          </motion.div>
-        </div>
+              {item.category}
+            </Badge>
+
+            {/* Quick add button overlay */}
+            <motion.div
+              className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={(e) => e.preventDefault()}
+            >
+              <Button
+                size="sm"
+                onClick={() => addItem(item)}
+                disabled={isInBasket}
+                className={`shadow-lg ${
+                  isInBasket
+                    ? "bg-green-600 hover:bg-green-600"
+                    : "bg-accent hover:bg-accent/90"
+                }`}
+              >
+                {isInBasket ? (
+                  <Check className="h-4 w-4" />
+                ) : (
+                  <Plus className="h-4 w-4" />
+                )}
+              </Button>
+            </motion.div>
+          </div>
+        </Link>
 
         <CardHeader className="pb-2 pt-4">
           <div className="space-y-1">
