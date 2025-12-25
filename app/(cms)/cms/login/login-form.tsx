@@ -96,7 +96,7 @@ export function LoginForm() {
           )}
 
           {/* Google Login */}
-          <Button
+          {/* <Button
             type="button"
             variant="outline"
             onClick={handleGoogleLogin}
@@ -104,7 +104,7 @@ export function LoginForm() {
           >
             <Chrome className="h-4 w-4" />
             Continue with Google
-          </Button>
+          </Button> */}
 
           {/* Divider */}
           <div className="relative mb-6">
@@ -113,7 +113,7 @@ export function LoginForm() {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-card px-2 text-muted-foreground">
-                Or continue with email
+                Continue with email
               </span>
             </div>
           </div>
